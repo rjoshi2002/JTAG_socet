@@ -31,13 +31,7 @@ module tap_ctrl (
         /*
         * Allow parallel load of data register, instruction not changed
         */
-        CAPTURE_DR: begin
-            if (tapif.TMS == 1) begin
-                next_state = EXIT1_DR;
-            end else begin
-                next_state = SHIFT_DR;
-            end
-        end
+        CAPTURE_DR: next_state = (tapif.TMS) ? EXIT1_DR : SHIFT_DR; 
 
         /*
         * Shift enable for DR, instruction not changed
