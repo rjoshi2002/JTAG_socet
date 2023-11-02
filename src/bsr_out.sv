@@ -11,7 +11,7 @@
 //parallel_out: output from cell to IO
 
 module bsr_out (
-    input logic parallel_in, scan_in, shift_dr, capture_dr, update_dr, mode, TRST, 
+    input logic TCK, parallel_in, scan_in, shift_dr, capture_dr, update_dr, mode, TRST, 
     output logic scan_out, parallel_out);
   
 
@@ -23,26 +23,32 @@ module bsr_out (
   assign scan_out = q_0;
 
   //capture flip flop
-  always @(posedge capture_dr or negedge TRST)
+  always @(posedge TCK or negedge TRST)
   begin
     if (TRST == 1'b0) begin
       // Asynchronous reset when reset goes low
       q_0 <= 1'b0;
     end else begin
       // Assign D to Q on positive clock edge
-      q_0 <= d_0;
+      if(capture_dr == 1'b1)
+      begin
+        q_0 <= d_0;
+      end
     end
   end
   
   //update cell flip flop
-  always @(posedge update_dr or negedge TRST)
+  always @(posedge TCK or negedge TRST)
   begin
     if (TRST == 1'b0) begin
       // Asynchronous reset when reset goes low
       q_1 <= 1'b0;
     end else begin
       // Assign D to Q on positive clock edge
-      q_1 <= d_1;
+      if(update_dr == 1'b1)
+      begin
+        q_1 <= d_1;
+      end
     end
   end
   
