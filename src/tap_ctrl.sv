@@ -22,148 +22,76 @@ module tap_ctrl (
     always_comb begin : next_state_logic 
         next_state = state;
         casez(state)
-        TEST_LOGIC_RESET: next_state = (tapif.TMS) ? TEST_LOGIC_RESET : RUN_TEST_IDLE; 
-        RUN_TEST_IDLE: next_state = (tapif.TMS) ? SELECT_DR_SCAN : RUN_TEST_IDLE; 
+            TEST_LOGIC_RESET: next_state = (tapif.TMS) ? TEST_LOGIC_RESET : RUN_TEST_IDLE; 
+            RUN_TEST_IDLE: next_state = (tapif.TMS) ? SELECT_DR_SCAN : RUN_TEST_IDLE; 
 
-        // Neither instruction or data register enabled
-        SELECT_DR_SCAN: next_state = (tapif.TMS) ? SELECT_IR_SCAN : CAPTURE_DR; 
+            // Neither instruction or data register enabled
+            SELECT_DR_SCAN: next_state = (tapif.TMS) ? SELECT_IR_SCAN : CAPTURE_DR; 
 
-        /*
-        * Allow parallel load of data register, instruction not changed
-        */
-        CAPTURE_DR: next_state = (tapif.TMS) ? EXIT1_DR : SHIFT_DR; 
+            /*
+            * Allow parallel load of data register, instruction not changed
+            */
+            CAPTURE_DR: next_state = (tapif.TMS) ? EXIT1_DR : SHIFT_DR; 
 
-        /*
-        * Shift enable for DR, instruction not changed
-        */
-        SHIFT_DR: begin
-            if (tapif.TMS == 1) begin
-                next_state = EXIT1_DR;
-            end else begin
-                next_state = SHIFT_DR;
-            end
-        end
+            /*
+            * Shift enable for DR, instruction not changed
+            */
+            SHIFT_DR: next_state = (tapif.TMS) ? EXIT1_DR: SHIFT_DR; 
 
-        /*
-        * Stop shifting DR, no load enable, instruction not changed
-        */
-        EXIT1_DR: begin
-            if (tapif.TMS == 1) begin
-                next_state = UPDATE_DR;
-            end else begin
-                next_state = PAUSE_DR;
-            end
-        end
+            /*
+            * Stop shifting DR, no load enable, instruction not changed
+            */
+            EXIT1_DR: next_state = (tapif.TMS) ? UPDATE_DR: PAUSE_DR; 
 
-        /*
-        * Shift disable, load disable
-        */
-        PAUSE_DR: begin
-            if (tapif.TMS == 1) begin
-                next_state = EXIT2_DR;
-            end else begin
-                next_state = PAUSE_DR;
-            end
-        end
+            /*
+            * Shift disable, load disable
+            */
+            PAUSE_DR: next_state = (tapif.TMS) ? EXIT2_DR: PAUSE_DR; 
 
-        /*
-        * Disable everything
-        */
-        EXIT2_DR: begin
-            if (tapif.TMS == 1) begin
-                next_state = UPDATE_DR;
-            end else begin
-                next_state = SHIFT_DR;
-            end
-        end
+            /*
+            * Disable everything
+            */
+            EXIT2_DR: next_state = (tapif.TMS) ? UPDATE_DR : SHIFT_DR; 
 
-        /*
-        * Shift disable, DR load enable.
-        */
-        UPDATE_DR: begin
-            if (tapif.TMS == 1) begin
-                next_state = SELECT_DR_SCAN;
-            end else begin
-                next_state = RUN_TEST_IDLE;
-            end
-        end
+            /*
+            * Shift disable, DR load enable.
+            */
+            UPDATE_DR: next_state = (tapif.TMS) ? SELECT_DR_SCAN: RUN_TEST_IDLE; 
 
-        /*
-        * Same as DR scan
-        */
-        SELECT_IR_SCAN: begin
-            if (tapif.TMS == 1) begin
-                next_state = TEST_LOGIC_RESET;
-            end else begin
-                next_state = CAPTURE_IR;
-            end
-        end
+            /*
+            * Same as DR scan
+            */
+            SELECT_IR_SCAN: next_state = (tapif.TMS) ? TEST_LOGIC_RESET: CAPTURE_IR; 
 
-        /*
-        * IR load
-        */
-        CAPTURE_IR: begin
-            if (tapif.TMS == 1) begin
-                next_state = EXIT1_IR;
-            end else begin
-                next_state = SHIFT_IR;
-            end
-        end
+            /*
+            * IR load
+            */
+            CAPTURE_IR: next_state = (tapif.TMS) ? EXIT1_DR: SHIFT_IR; 
 
-        /*
-        * IR shift
-        */
-        SHIFT_IR: begin
-            if (tapif.TMS == 1) begin
-                next_state = EXIT1_IR;
-            end else begin
-                next_state = SHIFT_IR;
-            end
-        end
+            /*
+            * IR shift
+            */
+            SHIFT_IR: next_state = (tapif.TMS) ? EXIT1_IR: PAUSE_IR; 
 
-        /*
-        * Disable all
-        */
-        EXIT1_IR: begin
-            if (tapif.TMS == 1) begin
-                next_state = UPDATE_IR;
-            end else begin
-                next_state = PAUSE_IR;
-            end
-        end
+            /*
+            * Disable all
+            */
+            EXIT1_IR: next_state = (tapif.TMS) ? UPDATE_IR : PAUSE_IR; 
 
-        /*
-        * Disable all
-        */
-        PAUSE_IR: begin
-            if (tapif.TMS == 1) begin
-                next_state = EXIT2_IR;
-            end else begin
-                next_state = PAUSE_IR;
-            end
-        end
+            /*
+            * Disable all
+            */
+            PAUSE_IR: next_state = (tapif.TMS) ? EXIT2_IR: PAUSE_IR; 
 
-        /*
-        * Disable all
-        */
-        EXIT2_IR: begin
-            if (tapif.TMS == 1) begin
-                next_state = UPDATE_IR;
-            end else begin
-                next_state = SHIFT_IR;
-            end
-        end
+            /*
+            * Disable all
+            */
+            EXIT2_IR: next_state = (tapif.TMS) ? UPDATE_IR: SHIFT_IR; 
 
-        /*
-        * load enable
-        */
-        UPDATE_IR: begin
-            if (tapif.TMS == 1) begin
-                next_state = SELECT_DR_SCAN;
-            end else begin
-                next_state = RUN_TEST_IDLE;
-            end
-        end
+            /*
+            * load enable
+            */
+            UPDATE_IR: next_state = (tapif.TMS) ? SELECT_DR_SCAN: RUN_TEST_IDLE; 
         endcase
     end
 
