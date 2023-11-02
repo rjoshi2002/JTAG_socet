@@ -28,69 +28,43 @@ module tap_ctrl (
             // Neither instruction or data register enabled
             SELECT_DR_SCAN: next_state = (tapif.TMS) ? SELECT_IR_SCAN : CAPTURE_DR; 
 
-            /*
-            * Allow parallel load of data register, instruction not changed
-            */
+            // Allow parallel load of data register, instruction not changed
             CAPTURE_DR: next_state = (tapif.TMS) ? EXIT1_DR : SHIFT_DR; 
 
-            /*
-            * Shift enable for DR, instruction not changed
-            */
+            // Shift enable for DR, instruction not changed
             SHIFT_DR: next_state = (tapif.TMS) ? EXIT1_DR: SHIFT_DR; 
 
-            /*
-            * Stop shifting DR, no load enable, instruction not changed
-            */
+            // Stop shifting DR, no load enable, instruction not changed
             EXIT1_DR: next_state = (tapif.TMS) ? UPDATE_DR: PAUSE_DR; 
 
-            /*
-            * Shift disable, load disable
-            */
+            // Shift disable, load disable
             PAUSE_DR: next_state = (tapif.TMS) ? EXIT2_DR: PAUSE_DR; 
 
-            /*
-            * Disable everything
-            */
+            // Disable everything
             EXIT2_DR: next_state = (tapif.TMS) ? UPDATE_DR : SHIFT_DR; 
-
-            /*
-            * Shift disable, DR load enable.
-            */
+            
+            // Shift disable, DR load enable.
             UPDATE_DR: next_state = (tapif.TMS) ? SELECT_DR_SCAN: RUN_TEST_IDLE; 
 
-            /*
-            * Same as DR scan
-            */
+            // Same as DR scan
             SELECT_IR_SCAN: next_state = (tapif.TMS) ? TEST_LOGIC_RESET: CAPTURE_IR; 
 
-            /*
-            * IR load
-            */
+            // IR load
             CAPTURE_IR: next_state = (tapif.TMS) ? EXIT1_DR: SHIFT_IR; 
 
-            /*
-            * IR shift
-            */
+            // IR shift
             SHIFT_IR: next_state = (tapif.TMS) ? EXIT1_IR: PAUSE_IR; 
 
-            /*
-            * Disable all
-            */
+            // Disable all
             EXIT1_IR: next_state = (tapif.TMS) ? UPDATE_IR : PAUSE_IR; 
 
-            /*
-            * Disable all
-            */
+            // Disable all
             PAUSE_IR: next_state = (tapif.TMS) ? EXIT2_IR: PAUSE_IR; 
 
-            /*
-            * Disable all
-            */
+            // Disable all
             EXIT2_IR: next_state = (tapif.TMS) ? UPDATE_IR: SHIFT_IR; 
 
-            /*
-            * load enable
-            */
+            // load enable
             UPDATE_IR: next_state = (tapif.TMS) ? SELECT_DR_SCAN: RUN_TEST_IDLE; 
         endcase
     end
