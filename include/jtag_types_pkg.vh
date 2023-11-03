@@ -10,6 +10,7 @@ Adapted by Wen-Bo Hung, Rohan Joshi, Jaehong Choi, Yunlin Zhang
 package jtag_types_pkg;
 
     parameter INSTRUCTION_ONE_HOT = 16;
+	parameter INSTRUCTION_BIT = 5;
 
 	typedef enum logic [3:0]
 	{
@@ -35,7 +36,7 @@ package jtag_types_pkg;
 	} state_t;
 
 
-	typedef enum logic [4:0]
+	typedef enum logic [INSTRUCTION_BIT-1:0]
 	{
 		// Mandatory
 		BYPASS					= 5'b00000,	// 6.2.1.1.d	BYPASS = '0 and '1

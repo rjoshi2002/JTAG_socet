@@ -14,7 +14,7 @@ import jtag_types_pkg::*;
 	logic					TDI;
 	logic					ir_capture, ir_shift, ir_update, test_reset;
 	logic					TDO;
-	instruction_decode_t	parallel_out;
+	instruction_t	parallel_out;
   	logic         tlr_reset;
 	modport IR
 	(

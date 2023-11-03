@@ -1,5 +1,5 @@
-`ifndef ADDER_IF_SVH
-`define ADDER_IF_SVH
+`ifndef ADDER_IF_VH
+`define ADDER_IF_VH
 
 interface adder_if #(parameter BIT_WIDTH = 4) (input logic clk);
   logic n_rst;
