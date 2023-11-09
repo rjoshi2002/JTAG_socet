@@ -82,7 +82,7 @@ module tap_ctrl (
 
         casez(state)
             TEST_LOGIC_RESET: begin
-                tapif.test_reset = 1'b1;
+                tapif.tap_reset = 1'b1;
             end
 
             CAPTURE_DR: begin
