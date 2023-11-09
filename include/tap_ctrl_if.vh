@@ -19,7 +19,7 @@ interface tap_ctrl_if;
         output tap_state_uir, 
 		ir_shift, ir_update, ir_capture, 
 		dr_shift, dr_update, dr_capture,
-		test_reset 
+		tap_reset 
     );
 
 endinterface 
