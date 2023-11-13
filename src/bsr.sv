@@ -9,6 +9,7 @@
 //TRST: reset signal for JTAG module
 //scan_out: output from captured value to next bsr cell
 //parallel_out: output from cell to IO
+// Do we need tlr_reset in bsr?
 `include "bsr_if.vh"
 
 module bsr(
@@ -49,20 +50,18 @@ module bsr(
   always_comb begin : NXT_SCAN_LOGIC 
     nxt_scan1 = scan1;
     nxt_scan2 = scan2;
-    if(bsrif.dr_capture && bsrif.bsr_select) begin
-      if(bsrif.dr_shift) begin // Data Scan in from TDI
-        nxt_scan1[0] = bsrif.TDI;
-        for(i = 1; i < NUM_IN; i++) begin
-          nxt_scan1[i] = scan1[i-1];
-        end
-        nxt_scan2[0] = scan1[NUM_IN-1];
-        for(j = 1; j < NUM_OUT; j++) begin
-          nxt_scan2[j] = scan2[j-1];
-        end
+    if(bsrif.dr_capture && bsrif.bsr_select) begin // Capture from system input pin and system logic output
+      nxt_scan1 = bsrif.parallel_in;
+      nxt_scan2 = bsrif.parallel_system_logic_out;
+    end
+    else if(bsrif.dr_shift && bsrif.bsr_select) begin // Data Scan in from TDI
+      nxt_scan1[0] = bsrif.TDI;
+      for(i = 1; i < NUM_IN; i++) begin
+        nxt_scan1[i] = scan1[i-1];
       end
-      else begin // Capture from system input pin and system logic output
-        nxt_scan1 = bsrif.parallel_in;
-        nxt_scan2 = bsrif.parallel_system_logic_out;
+      nxt_scan2[0] = scan1[NUM_IN-1];
+      for(j = 1; j < NUM_OUT; j++) begin
+        nxt_scan2[j] = scan2[j-1];
       end
     end
   end

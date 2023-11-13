@@ -2,16 +2,16 @@ import uvm_pkg::*;
 `include "uvm_macros.svh"
 `include "transaction.svh"
 
-class adder_sequence extends uvm_sequence#(transaction);
-  `uvm_object_utils(adder_sequence)
+class extest_sequence extends uvm_sequence#(jtag_transaction);
+  `uvm_object_utils(extest_sequence)
 
   function new(string name = "");
     super.new(name);
   endfunction: new
 
   task body();
-    transaction req_item;
-    req_item = transaction#(4)::type_id::create("req_item");
+    jteg_transaction req_item;
+    req_item = jteg_transaction::type_id::create("req_item");
 
     // repeat 25 randomized test cases
     repeat(25) begin
@@ -19,10 +19,13 @@ class adder_sequence extends uvm_sequence#(transaction);
       if(!req_item.randomize()) begin
         `uvm_fatal("Sequence", "Not able to randomize")
       end
+      req_item.instruction = 5'b00011; // EXTEST
       finish_item(req_item);
     end
   endtask: body
 endclass
+
+
 
 class sequencer extends uvm_sequencer#(transaction);
   `uvm_component_utils(sequencer)

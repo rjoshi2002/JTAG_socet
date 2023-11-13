@@ -15,10 +15,11 @@ import jtag_types_pkg::*;
     logic mode;
     logic dr_shift, dr_capture, dr_update;
     logic bsr_select;
+    //logic tlr_reset;
 
 	modport BSR
 	(
-		input parallel_in, parallel_system_logic_out, TDI, mode, dr_shift, dr_capture, dr_update, 
+		input parallel_in, parallel_system_logic_out, TDI, mode, dr_shift, dr_capture, dr_update, bsr_select, 
 		output to_system_logic, to_output_pin, TDO
 	);
 endinterface

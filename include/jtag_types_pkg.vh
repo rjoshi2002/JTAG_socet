@@ -39,7 +39,7 @@ package jtag_types_pkg;
 	typedef enum logic [INSTRUCTION_BIT-1:0]
 	{
 		// Mandatory
-		BYPASS					= 5'b00000,	// 6.2.1.1.d	BYPASS = '0 and '1
+		BYPASS					= 5'b00000,	// 6.2.1.1.d	BYPASS = '0 and '1, it should be '1 based on IEEE rule
 		SAMPLE					= 5'b00001,
 		PRELOAD					= 5'b00010,
 		EXTEST					= 5'b00011,

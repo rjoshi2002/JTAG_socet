@@ -14,17 +14,17 @@ module instruction_reg(
 	input logic TCK, TRST, 
     instruction_reg_if.IR IR
 );
-	import jtag_types_pkg::*;
-	instruction_t n_shift_reg, shift_reg;
-	instruction_t n_parallel_out;
+
+import jtag_types_pkg::*;
+instruction_t n_shift_reg, shift_reg;
+instruction_t n_parallel_out;
 
 parameter INSTRUCTION_BIT = 5;
-
+assign IR.TDO = shift_reg[0];
 always_comb begin : instruction_reg_control
 //anti-latch
 	n_shift_reg = shift_reg;
 	n_parallel_out = IR.parallel_out;
-	IR.TDO = shift_reg[0];
 
 //Serial
 	if (IR.ir_capture) // Set a default value
