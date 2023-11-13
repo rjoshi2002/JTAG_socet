@@ -15,11 +15,15 @@ module instruction_decoder(
         idif.bsr_mode = 1'b0;
         idif.id_select = 1'b0;
         idif.bypass_select = 1'b0;
-        //idif.tmp_select = 1'b0;
+        idif.bypass_decode = 1'b0;
+        idif.tmp_select = 1'b0;
         idif.ahb_select = 1'b0;
+        idif.clamp_hold_decode = 1'b0;
+        idif.clamp_release_decode = 1'b0;
         case (idif.parallel_out)
             BYPASS: begin
                 idif.bypass_select = 1'b1;
+                idif.bypass_decode = 1'b1;
             end
             SAMPLE: begin
                 idif.bsr_select = 1'b1;
@@ -38,6 +42,14 @@ module instruction_decoder(
             end
             AHB: begin
                 idif.ahb_select = 1'b1;
+            end
+            CLAMP_HOLD: begin
+                idif.tmp_select = 1'b1;
+                idif.clamp_hold_decode = 1'b1;
+            end
+            CLAMP_RELEASE: begin
+                idif.tmp_select = 1'b1;
+                idif.clamp_release_decode = 1'b1;
             end
         endcase
     end

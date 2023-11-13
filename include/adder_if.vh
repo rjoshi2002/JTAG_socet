@@ -11,7 +11,6 @@ interface adder_if #(parameter BIT_WIDTH = 4) (input logic clk);
   logic [BIT_WIDTH - 1:0] sum;
   logic overflow;
   
-  logic check = 1;
 
   modport tester
   (

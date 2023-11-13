@@ -107,6 +107,7 @@ module tap_ctrl (
 
             UPDATE_IR: begin
                 tapif.ir_update = 1'b1;
+                tapif.tap_state_uir = 1'b1;
             end
 
         endcase
