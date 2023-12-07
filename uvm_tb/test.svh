@@ -17,7 +17,7 @@ class extest_test extends uvm_test;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     env = environment::type_id::create("env", this);
-    seq = extest_sequence::type_id::create("seq");
+    seq = extest_sequence::type_id::create("seq", this);
 
     // send interface down
     if (!uvm_config_db#(virtual jtag_if)::get(this, "", "jtag_vif", vif)) begin
@@ -27,7 +27,7 @@ class extest_test extends uvm_test;
     uvm_config_db#(virtual jtag_if)::set(this, "env.agt*", "jtag_vif", vif);
   endfunction: build_phase
 
-  task run_phase(uvm_phase phase);
+  task main_phase(uvm_phase phase);
     phase.raise_objection(this, "Starting sequence in main phase");
     $display("%t Starting sequence run_phase", $time);
     seq.start(env.agt.sqr);

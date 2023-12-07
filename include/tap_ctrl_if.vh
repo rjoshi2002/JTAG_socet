@@ -13,7 +13,8 @@ interface tap_ctrl_if;
     logic TMS; 
     logic tap_state_uir;
     logic ir_update, ir_shift, ir_capture;
-    logic dr_capture, dr_shift, dr_shift;  
+    logic dr_capture, dr_shift, dr_update;  
+    logic tap_reset;
     modport tap (
         input TMS, 
         output tap_state_uir, 

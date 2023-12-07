@@ -1,7 +1,7 @@
 /* Made by Wen-Bo Hung and Rohan Joshi, 2023/11/2
    SoCET JTAG team
 */
-
+`include "jtag_types_pkg.vh"
 `ifndef BSR_IF_VH
 `define BSR_IF_VH
 // Default num of input and output pins are adder's pin
@@ -10,7 +10,7 @@ import jtag_types_pkg::*;
 	logic [NUM_IN - 1: 0] parallel_in;
     logic [NUM_OUT - 1: 0] parallel_system_logic_out;
     logic [NUM_IN - 1: 0] to_system_logic;
-    logic [NUM_OUT - 1: 0] to_output_pin
+    logic [NUM_OUT - 1: 0] to_output_pin;
     logic TDI, TDO;
     logic mode;
     logic dr_shift, dr_capture, dr_update;

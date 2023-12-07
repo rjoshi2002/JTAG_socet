@@ -1,7 +1,7 @@
 import uvm_pkg::*;
 `include "uvm_macros.svh"
 `include "agent.svh"
-`include "jtag_if.svh"
+`include "jtag_if.vh"
 `include "comparator.svh"
 `include "predictor.svh"
 `include "transaction.svh"
@@ -10,7 +10,7 @@ class environment extends uvm_env;
   `uvm_component_utils(environment)
 
   jtag_agent agt;
-  predictor pred;
+  jtag_predictor pred;
   comparator comp;
 
   function new(string name = "env", uvm_component parent = null);
@@ -19,12 +19,12 @@ class environment extends uvm_env;
 
   function void build_phase(uvm_phase phase);
     agt = jtag_agent::type_id::create("agt", this);
-    pred = predictor::type_id::create("pred", this);
+    pred = jtag_predictor::type_id::create("pred", this);
     comp = comparator::type_id::create("comp", this);
   endfunction
 
   function void connect_phase(uvm_phase phase);
-    agt.mon.adder_ap.connect(pred.analysis_export); // connect monitor to predictor
+    agt.mon.jtag_ap.connect(pred.analysis_export); // connect monitor to predictor
     pred.pred_ap.connect(comp.expected_export); // connect predictor to comparator
     agt.mon.result_ap.connect(comp.actual_export); // connect monitor to comparator
   endfunction

@@ -11,7 +11,7 @@
 //parallel_out: output from cell to IO
 // Do we need tlr_reset in bsr?
 `include "bsr_if.vh"
-
+`include "jtag_types_pkg.vh"
 module bsr(
     input TCK, TRST, 
     bsr_if.BSR bsrif

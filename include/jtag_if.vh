@@ -10,6 +10,7 @@
 
 interface jtag_if #(parameter NUM_IN = 9, parameter NUM_OUT = 5);
 
+    logic TCK, clk;
     logic TDO, TMS, TDI;
     logic TRST, nRST;
     //logic [4:0] scan_out; // For UVM testbench to do the test
@@ -26,12 +27,12 @@ interface jtag_if #(parameter NUM_IN = 9, parameter NUM_OUT = 5);
     logic [NUM_IN + NUM_OUT - 1:0] tap_series;
 
     modport jtag (
-        input TDI, TMS,  parallel_in, TRST, nRST, 
+        input TCK, clk, TDI, TMS,  parallel_in, TRST, nRST, 
         output TDO, parallel_out
     );
 
     modport tb (
-        input TDO,  parallel_out, 
+        input TCK, clk, TDO,  parallel_out, 
         output TDI, TMS,  parallel_in, TRST, nRST
     );
 

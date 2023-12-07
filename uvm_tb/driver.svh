@@ -1,6 +1,6 @@
 import uvm_pkg::*;
 `include "uvm_macros.svh"
-`include "jtag_if.svh"
+`include "jtag_if.vh"
 
 class jtag_driver extends uvm_driver#(jtag_transaction);
   `uvm_component_utils(jtag_driver)
@@ -23,10 +23,10 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
     jtag_transaction req_item;
     forever begin
       seq_item_port.get_next_item(req_item);
-      DUT_reset();
       vif.parallel_in = req_item.parallel_in;
       vif.instruction = req_item.instruction;
       vif.tap_series = req_item.tap_series;
+      DUT_reset();
       if(req_item.instruction == 5'b00011) begin //EXTEST
         vif.TMS = 1'b0;
         @(negedge vif.TCK); // IDLE
@@ -36,10 +36,10 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
         vif.capture_check = 1;
         dr_scanin(req_item.tap_series); // Scan in the adder input through TDI
         dr_capture(); // Capture the adder output 
-        vir.scan_check = 1;
+        vif.scan_check = 1;
       end
       #(0.2)
-      @(posedge vif.clk);
+      @(negedge vif.TCK);
       seq_item_port.item_done();
     end
   endtask: run_phase
@@ -50,11 +50,11 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
     vif.TRST = 0;
     vif.nRST = 0;
     vif.TMS = 1;
-    @(posedge vif.TCLK);
-    @(posedge vif.TCLK);
+    @(posedge vif.TCK);
+    @(posedge vif.TCK);
     vif.TRST = 1;
     vif.nRST = 1;
-    @(negedge vif.TCLK);
+    @(negedge vif.TCK);
   endtask
 
   task set_instr;
@@ -97,7 +97,7 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
   endtask
 
   task dr_scanin;
-  logic [13:0] data;
+  input logic [13:0] data;
   begin
     vif.TMS = 1'b1;
     @(negedge vif.TCK);
@@ -117,4 +117,4 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
     @(negedge vif.TCK); // Go back to IDLE state
   end
   endtask
-endclass: driver
+endclass: jtag_driver
