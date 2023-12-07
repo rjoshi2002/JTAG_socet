@@ -78,7 +78,7 @@ module tap_ctrl (
         tapif.dr_shift = 1'b0;
         tapif.dr_update = 1'b0;
         tapif.dr_capture = 1'b0;
-        tapif.test_reset = 1'b0;
+        tapif.tap_reset = 1'b0;
 
         casez(state)
             TEST_LOGIC_RESET: begin

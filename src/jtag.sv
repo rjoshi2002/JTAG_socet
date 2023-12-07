@@ -11,7 +11,6 @@
 `include "output_logic_if.vh"
 
 module jtag(
-    input logic TCK, clk, 
     jtag_if.jtag jtif
 );
     /* Types */
@@ -22,31 +21,31 @@ module jtag(
     parameter NUM_IN = 9;
     parameter NUM_OUT = 5;
     /* Interface instantiations */
-    adder_if adif();
+    adder_if adif(jtif.clk);
     bsr_if bsrif();
-    instruction_deocder_if idif();
+    instruction_decoder_if idif();
     instruction_reg_if irif();
     tap_ctrl_if tcif();
     output_logic_if olif();
 
     /* Module instantiations */
     adder_Nbit     ADDER(adif);
-    bsr            BSR(TCK, jtif.TRST, bsrif);
-    instruction_decoder  INS_DECODE(TCK, jtif.TRST, idif);
-    instruction_reg      INS_REG(TCK, jtif.TRST, irif);
-    tap_ctrl             TAP_CTRL(TCK, jtif.TRST, tcif);
-    output_logic         OUTPUT_LOGIC(TCK, jtif.TRST, olif);
+    bsr            BSR(jtif.TCK, jtif.TRST, bsrif);
+    instruction_decoder  INS_DECODE(jtif.TCK, jtif.TRST, idif);
+    instruction_reg      INS_REG(jtif.TCK, jtif.TRST, irif);
+    tap_ctrl             TAP_CTRL(jtif.TCK, jtif.TRST, tcif);
+    output_logic         OUTPUT_LOGIC(jtif.TCK, jtif.TRST, olif);
 
     /*Input Signal Assign*/
     //4-bit adder(To test the functionality of BSR)
     assign adif.n_rst = jtif.nRST;
-    assign adif.clk = clk;
-    assign adif.a = bsrif.to_system_logic[0:BIT_WIDTH-1];
+    //assign adif.clk = jtif.clk;
+    assign adif.a = bsrif.to_system_logic[BIT_WIDTH-1:0];
     assign adif.b = bsrif.to_system_logic[2*BIT_WIDTH-1:BIT_WIDTH];
-    assign adif.carry_in = bsrif.to_system_logic[NUM_IN];
+    assign adif.carry_in = bsrif.to_system_logic[NUM_IN-1];
     //BSR
     assign bsrif.parallel_in = jtif.parallel_in;
-    assign bsrif.parallel_system_logic_out = {adif.sum, adif.overflow};
+    assign bsrif.parallel_system_logic_out = {adif.overflow, adif.sum};
     assign bsrif.TDI = jtif.TDI;
     assign bsrif.mode = idif.bsr_mode; // Change it when having tmp controller
     assign bsrif.dr_shift = tcif.dr_shift;

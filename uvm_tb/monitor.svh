@@ -1,14 +1,14 @@
 import uvm_pkg::*;
 `include "uvm_macros.svh"
-`include "jtag_if.svh"
+`include "jtag_if.vh"
 
 class jtag_monitor extends uvm_monitor;
   `uvm_component_utils(jtag_monitor)
 
   virtual jtag_if vif;
 
-  uvm_analysis_port#(jtag_transaction) jtag_ap;
-  uvm_analysis_port#(jtag_transaction) result_ap;
+  uvm_analysis_port#(jtag_transaction) jtag_ap;   // Port to predictor
+  uvm_analysis_port#(jtag_transaction) result_ap; // Port to comparator
   jtag_transaction prev_tx; // check if new transaction has been sent
 
   function new(string name, uvm_component parent = null);
@@ -25,12 +25,10 @@ class jtag_monitor extends uvm_monitor;
 
   virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
-    prev_tx = jtag_transaction::type_id::create("prev_tx");
+    prev_tx = jtag_transaction#(5,9,5)::type_id::create("prev_tx");
     forever begin
       jtag_transaction tx;
-      tx = jtag_transaction::type_id::create("tx");
-      @(posedge vif.TCK);
-      @(posedge vif.TCK);
+      tx = jtag_transaction#(5,9,5)::type_id::create("tx");
       @(posedge vif.TCK);
       // Capture activity between the driver and DUT
       tx.parallel_in = vif.parallel_in;
