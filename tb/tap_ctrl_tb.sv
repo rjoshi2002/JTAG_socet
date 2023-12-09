@@ -1,4 +1,5 @@
 /* 
+    Written by Linda Zhang 
     Testbench for TAP controller 
 */
 
@@ -57,47 +58,47 @@ program test ();
 
     task check_output; 
         input logic tap_reset, dr_capture, dr_shift, dr_update, ir_capture, ir_shift, ir_update, tap_state_uir; 
-        input string test_case; 
+        input string tb_test_case; 
         begin 
-            if(tap_reset == tap_ctrl_tb.tap_reset) begin
-                // $display("Correct tap_reset during %s test case", test_case);
+            if(tap_reset == tap_ctrl_tb.tapif.tap_reset) begin
+                // $display("Correct tap_reset during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect tap_reset during %s test case, current tap_reset is %d", test_case, tap_ctrl_tb.tap_reset); 
+                $display("Incorrect tap_reset during %s test case, current tap_reset is %d", tb_test_case, tap_ctrl_tb.tapif.tap_reset); 
             end 
-            if(dr_capture == tap_ctrl_tb.dr_capture) begin
-                // $display("Correct dr_capture during %s test case", test_case);
+            if(dr_capture == tap_ctrl_tb.tapif.dr_capture) begin
+                // $display("Correct dr_capture during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect dr_capture during %s test case, current dr_capture is %d", test_case, tap_ctrl_tb.dr_capture); 
+                $display("Incorrect dr_capture during %s test case, current dr_capture is %d", tb_test_case, tap_ctrl_tb.tapif.dr_capture); 
             end 
-            if(dr_shift == tap_ctrl_tb.dr_shift) begin
-                // $display("Correct dr_shift during %s test case", test_case);
+            if(dr_shift == tap_ctrl_tb.tapif.dr_shift) begin
+                // $display("Correct dr_shift during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect dr_shift during %s test case, current dr_shift is %d", test_case, tap_ctrl_tb.dr_shift); 
+                $display("Incorrect dr_shift during %s test case, current dr_shift is %d", tb_test_case, tap_ctrl_tb.tapif.dr_shift); 
             end 
-            if(dr_update == tap_ctrl_tb.dr_update) begin
-                // $display("Correct dr_update during %s test case", test_case);
+            if(dr_update == tap_ctrl_tb.tapif.dr_update) begin
+                // $display("Correct dr_update during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect dr_update during %s test case, current dr_update is %d", test_case, tap_ctrl_tb.dr_update); 
+                $display("Incorrect dr_update during %s test case, current dr_update is %d", tb_test_case, tap_ctrl_tb.tapif.dr_update); 
             end 
-            if(ir_capture == tap_ctrl_tb.ir_capture) begin
-                // $display("Correct ir_capture during %s test case", test_case);
+            if(ir_capture == tap_ctrl_tb.tapif.ir_capture) begin
+                // $display("Correct ir_capture during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect ir_capture during %s test case, current ir_capture is %d", test_case, tap_ctrl_tb.ir_capture); 
+                $display("Incorrect ir_capture during %s test case, current ir_capture is %d", tb_test_case, tap_ctrl_tb.tapif.ir_capture); 
             end 
-            if(ir_shift == tap_ctrl_tb.ir_shift) begin
-                // $display("Correct ir_shift during %s test case", test_case);
+            if(ir_shift == tap_ctrl_tb.tapif.ir_shift) begin
+                // $display("Correct ir_shift during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect ir_shift during %s test case, current ir_shift is %d", test_case, tap_ctrl_tb.ir_shift); 
+                $display("Incorrect ir_shift during %s test case, current ir_shift is %d", tb_test_case, tap_ctrl_tb.tapif.ir_shift); 
             end 
-            if(ir_update == tap_ctrl_tb.ir_update) begin
-                // $display("Correct ir_update during %s test case", test_case);
+            if(ir_update == tap_ctrl_tb.tapif.ir_update) begin
+                // $display("Correct ir_update during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect ir_update during %s test case, current ir_update is %d", test_case, tap_ctrl_tb.ir_update); 
+                $display("Incorrect ir_update during %s test case, current ir_update is %d", tb_test_case, tap_ctrl_tb.tapif.ir_update); 
             end 
-            if(tap_state_uir == tap_ctrl_tb.tap_state_uir) begin
-                // $display("Correct tap_state_uir during %s test case", test_case);
+            if(tap_state_uir == tap_ctrl_tb.tapif.tap_state_uir) begin
+                // $display("Correct tap_state_uir during %s test case", tb_test_case);
             end else begin
-                $display("Incorrect tap_state_uir during %s test case, current tap_state_uir is %d", test_case, tap_ctrl_tb.tap_state_uir); 
+                $display("Incorrect tap_state_uir during %s test case, current tap_state_uir is %d", tb_test_case, tap_ctrl_tb.tapif.tap_state_uir); 
             end 
         end 
     endtask
@@ -109,66 +110,66 @@ program test ();
 
         reset_dut; 
 
-        tap_ctrl_tb.TMS = 1; 
+        tap_ctrl_tb.tapif.TMS = 1; 
 
         tb_test_case = "test TEST_LOGIC_RESET"; 
         tb_test_case_num = tb_test_case_num + 1;
         @(posedge tap_ctrl_tb.TCK); 
-        check_output(1,0,0,0,0,0,0,0, test_case); 
+        check_output(1,0,0,0,0,0,0,0, tb_test_case); 
 
-        tap_ctrl_tb.TMS = 0;
+        tap_ctrl_tb.tapif.TMS = 0;
         tb_test_case = "test RUN_TEST_IDLE"; 
         tb_test_case_num = tb_test_case_num + 1; 
         @(posedge tap_ctrl_tb.TCK); 
-        check_output(0,0,0,0,0,0,0,0, test_case); 
+        check_output(0,0,0,0,0,0,0,0, tb_test_case); 
 
         // start testing data column 
-        tap_ctrl_tb.TMS = 1; 
+        tap_ctrl_tb.tapif.TMS = 1; 
         @(posedge tap_ctrl_tb.TCK); // SELECT_DR_SCAN 
 
         tb_test_case = "test CAPTURE_DR"; 
         tb_test_case_num = tb_test_case_num + 1;
-        tap_ctrl_tb.TMS = 0; 
+        tap_ctrl_tb.tapif.TMS = 0; 
         @(posedge tap_ctrl_tb.TCK); 
-        check_output(0,1,0,0,0,0,0,0, test_case); 
+        check_output(0,1,0,0,0,0,0,0, tb_test_case); 
         
-        // tap_ctrl_tb.TMS = 1; 
+        // tap_ctrl_tb.tapif.TMS = 1; 
         tb_test_case = "test SHIFT_DR"; 
         tb_test_case_num = tb_test_case_num + 1;
         @(posedge tap_ctrl_tb.TCK); 
-        check_output(0,0,1,0,0,0,0,0, test_case); 
+        check_output(0,0,1,0,0,0,0,0, tb_test_case); 
 
         @(posedge tap_ctrl_tb.TCK); // stay at SHIFT_DR 
-        check_output(0,0,1,0,0,0,0,0, test_case); 
+        check_output(0,0,1,0,0,0,0,0, tb_test_case); 
 
-        tap_ctrl_tb.TMS = 1; 
+        tap_ctrl_tb.tapif.TMS = 1; 
         tb_test_case = "test EXIT1_DR"; 
         tb_test_case_num = tb_test_case_num + 1; 
         @(posedge tap_ctrl_tb.TCK); 
-        check_output(0,0,0,0,0,0,0,0, test_case); 
+        check_output(0,0,0,0,0,0,0,0, tb_test_case); 
 
         tb_test_case = "test UPDATE_DR"; 
         tb_test_case_num = tb_test_case_num + 1;
         @(posedge tap_ctrl_tb.TCK); 
-        check_output(0,0,0,1,0,0,0,0, test_case); 
+        check_output(0,0,0,1,0,0,0,0, tb_test_case); 
 
-        // tap_ctrl_tb.TMS = 1; 
+        // tap_ctrl_tb.tapif.TMS = 1; 
         // tb_test_case = "test CAPTURE_IR"; 
         // tb_test_case_num = tb_test_case_num + 1;
         // @(posedge tap_ctrl_tb.TCK); 
-        // check_output(0,0,0,0,1,0,0,0, test_case); 
+        // check_output(0,0,0,0,1,0,0,0, tb_test_case); 
 
-        // tap_ctrl_tb.TMS = 1; 
+        // tap_ctrl_tb.tapif.TMS = 1; 
         // tb_test_case = "test SHIFT_IR"; 
         // tb_test_case_num = tb_test_case_num + 1;
         // @(posedge tap_ctrl_tb.TCK); 
-        // check_output(0,0,0,0,0,1,0,0, test_case); 
+        // check_output(0,0,0,0,0,1,0,0, tb_test_case); 
 
-        // tap_ctrl_tb.TMS = 1; 
+        // tap_ctrl_tb.tapif.TMS = 1; 
         // tb_test_case = "test UPDATE_IR"; 
         // tb_test_case_num = tb_test_case_num + 1;
         // @(posedge tap_ctrl_tb.TCK); 
-        // check_output(0,0,0,0,0,0,1,1, test_case); 
+        // check_output(0,0,0,0,0,0,1,1, tb_test_case); 
 
 
 
