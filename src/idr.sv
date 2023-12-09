@@ -1,3 +1,4 @@
+// Jason Choi
 // ID Register
 // TCK: JTAG clock signal
 // TDI: JTAG input signal
@@ -9,8 +10,8 @@
 `include "idr_if.vh"
 
 module idr(
-    input logic TCK,
-    // output logic [31:0] code,
+    input TCK,
+    input TRST,
     idr_if.IDR idrif
 );
 
@@ -20,17 +21,17 @@ module idr(
     // logic [31:0] code;
     logic [31:0] next_code;
 
-    ver = 4'b0001;
-    part = 16'b0000000000000001;
-    id = 11'b00000000001;
+    assign ver = 4'b0001;
+    assign part = 16'b0000000000000001;
+    assign id = 11'b00000000001;
 
     always_comb begin : idr_comb
-        next_code = code;
+        next_code = idrif.code;
 
         // if (bprif.ShiftDR) begin
         //     next_TDI = 1'b0
         // end
-        if (bprif.CaptureDR) begin
+        if (idrif.CaptureDR) begin
             next_code[31:28] = ver;
             next_code[27:12] = part;
             next_code[11:1] = id;
@@ -39,14 +40,13 @@ module idr(
     end
 
     always_ff @ (posedge TCK, negedge TRST) begin : idr_ff
-        if(TRST == 1'b0) begin
-            idrif.code <= 32'b0;
+        if (TRST == 1'b0) begin
+            idrif.code <= '0;
         end
         
         else begin
             idrif.code <= next_code;
         end
     end
-
 
 endmodule
