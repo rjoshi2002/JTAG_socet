@@ -31,6 +31,13 @@ run: build
 	+no_glitch_msg -suppress 12110 \
 	-do "coverage save -onexit coverage.ucdb" -do "run -all" &
 
+run_gui: build
+	vsim -i bsr_tb \
+	-voptargs=+acc\
+	-coverage \
+	+no_glitch_msg -suppress 12110 \
+	-do "coverage save -onexit coverage.ucdb" -do "run -all" &
+
 uvm_build:
 	vlog +incdir+$(SRCDIR)+$(TBDIR)+$(IFDIR) \
 	+sv include/jtag_types_pkg.sv $(UVM_SRC_FILES) \
@@ -49,7 +56,7 @@ uvm_run: uvm_build
 	+UVM_VERBOSITY=UVM_LOW \
 	-do "coverage save -onexit coverage.ucdb" -do "run -all" &
 
-run_gui: build
+uvm_run_gui: uvm_build
 	vsim -i tb_jtag -L \
 	$$QUESTA_HOME/uvm-1.2 \
 	-voptargs=+acc \

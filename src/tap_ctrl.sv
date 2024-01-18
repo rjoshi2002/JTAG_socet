@@ -53,7 +53,7 @@ module tap_ctrl (
             CAPTURE_IR: next_state = (tapif.TMS) ? EXIT1_DR: SHIFT_IR; 
 
             // IR shift
-            SHIFT_IR: next_state = (tapif.TMS) ? EXIT1_IR: PAUSE_IR; 
+            SHIFT_IR: next_state = (tapif.TMS) ? EXIT1_IR: SHIFT_IR; 
 
             // Disable all
             EXIT1_IR: next_state = (tapif.TMS) ? UPDATE_IR : PAUSE_IR; 

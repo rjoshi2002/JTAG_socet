@@ -35,15 +35,15 @@ class comparator extends uvm_scoreboard;
     forever begin
       expected_fifo.get(expected_tx);
       actual_fifo.get(actual_tx);
-      uvm_report_info("Comparator", $psprintf("\nExpected:\nresult_sum: %d\nresult_overflow: %d\n~~~~~~~~~~\nActual:\nsum: %d\noverflow: %d\n", expected_tx.result_sum, expected_tx.result_overflow, actual_tx.result_sum, actual_tx.result_overflow));
+      uvm_report_info("Comparator", $psprintf("\nExpected:\ncapture_system_logic_out: %d\nscan_system_logic_out: %d\n~~~~~~~~~~\nActual:\ncapture_system_logic_out: %d\nscan_system_logic_out: %d\n", expected_tx.capture_system_logic_out, expected_tx.scan_system_logic_out, actual_tx.capture_system_logic_out, actual_tx.scan_system_logic_out), UVM_LOW);
 
       // keep count of number of matches and mismatches (actual vs expected)
       if (expected_tx.compare(actual_tx)) begin
         m_matches++;
-        uvm_report_info("Comparator", "Data match");
+        uvm_report_info("Comparator", "Data match", UVM_LOW);
       end else begin
         m_mismatches++;
-        uvm_report_info("Comparator", "Error: Data mismatch");
+        uvm_report_info("Comparator", "Error: Data mismatch", UVM_LOW);
       end
     end
   endtask

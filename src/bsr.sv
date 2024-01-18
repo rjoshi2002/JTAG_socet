@@ -66,8 +66,8 @@ module bsr(
     end
   end
 
-  //update cell flip flop
-  always_ff @(posedge TCK, negedge TRST)
+  //output flip flop
+  always_ff @(negedge TCK, negedge TRST) // Parallel output update at negative edge of TCK
   begin
     if (TRST == 1'b0) begin
       // Asynchronous reset when reset goes low

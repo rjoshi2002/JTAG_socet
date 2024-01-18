@@ -22,14 +22,12 @@ module tb_jtag();
     jtif.clk = 0;
     forever #10 begin
        jtif.clk = ~jtif.clk;
-       jtif.TCK = ~jtif.TCK;
     end
   end
 
   initial begin
     jtif.TCK = 0;
-    forever #10 begin
-       jtif.clk = ~jtif.clk;
+    forever #20 begin
        jtif.TCK = ~jtif.TCK;
     end
   end
