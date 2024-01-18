@@ -32,7 +32,8 @@ class jtag_transaction #(parameter INSTRUCTION_BITS = 5, parameter NUM_IN = 9, p
       result = 1;
       return result;
     end
-    result = 0;
+    else
+      result = 0;
     return result;
   endfunction
 endclass

@@ -34,9 +34,11 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
         dr_capture(); // Capture the parallel input to adder
         dr_capture(); // Capture the adder output 
         vif.capture_check = 1;
+        @(negedge vif.TCK); // IDLE
         dr_scanin(req_item.tap_series); // Scan in the adder input through TDI
         dr_capture(); // Capture the adder output 
         vif.scan_check = 1;
+        @(negedge vif.TCK); // IDLE
       end
       #(0.2)
       @(negedge vif.TCK);
@@ -50,8 +52,8 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
     vif.TRST = 0;
     vif.nRST = 0;
     vif.TMS = 1;
-    @(posedge vif.TCK);
-    @(posedge vif.TCK);
+    @(negedge vif.TCK);
+    @(negedge vif.TCK);
     vif.TRST = 1;
     vif.nRST = 1;
     @(negedge vif.TCK);
@@ -61,13 +63,13 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
   input logic [4:0] instruction;
   begin
     vif.TMS = 1'b1;
-    @(negedge vif.TCK);
+    @(negedge vif.TCK); // Select DR Scan state
     vif.TMS = 1'b1;
-    @(negedge vif.TCK);
+    @(negedge vif.TCK); // Select IR Scan state
     vif.TMS = 1'b0;
-    @(negedge vif.TCK);
+    @(negedge vif.TCK); // Capture IR state
     vif.TMS = 1'b0;
-    @(negedge vif.TCK);
+    @(negedge vif.TCK); // Shift IR state
     for(int i = 0; i < 5; i++) begin
       vif.TDI = instruction[i]; // Shift in LSB first
       if(i == 4)
@@ -84,13 +86,13 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
   task dr_capture;
   begin
     vif.TMS = 1'b1;
-    @(negedge vif.TCK);
+    @(negedge vif.TCK); // Select DR Scan state
     vif.TMS = 1'b0;
-    @(negedge vif.TCK); // capture dr
+    @(negedge vif.TCK); // Capture DR state
     vif.TMS = 1'b1;
-    @(negedge vif.TCK);
+    @(negedge vif.TCK); // Exit1 state
     vif.TMS = 1'b1;
-    @(negedge vif.TCK); // Update dr
+    @(negedge vif.TCK); // Update DR state
     vif.TMS = 1'b0;
     @(negedge vif.TCK); // IDLE
   end
@@ -105,9 +107,9 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
     @(negedge vif.TCK); // Update DR
     vif.TMS = 1'b0;
     @(negedge vif.TCK); // Shift DR
-    for(int i = 0; i < 14; i++) begin
-      vif.TDI = data[i]; // Shift in LSB first
-      if(i == 13)
+    for(int i = 13; i >=0; i--) begin
+      vif.TDI = data[i]; // Shift in MSB first
+      if(i == 0)
         vif.TMS = 1'b1;
       @(negedge vif.TCK);
     end

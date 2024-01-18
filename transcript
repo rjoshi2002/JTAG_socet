@@ -1,0 +1,339 @@
+# vsim -c tb_jtag -L /package/eda/mg/questa10.6b/questasim/uvm-1.2 -voptargs="+acc" -coverage "+UVM_TESTNAME=extest_test" "+UVM_VERBOSITY=UVM_LOW" -do "coverage save -onexit coverage.ucdb" -do "run -all" 
+# Start time: 11:19:17 on Jan 18,2024
+# Loading /tmp/socet154@asicfab.ecn.purdue.edu_dpi_94233/linux_x86_64_gcc-5.3.0/export_tramp.so
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Note: (vopt-143) Recognized 1 FSM in module "tap_ctrl(fast)".
+# //  Questa Sim-64
+# //  Version 10.6b linux_x86_64 May 25 2017
+# //
+# //  Copyright 1991-2017 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading /package/eda/mg/questa10.6b/questasim/uvm-1.2.uvm_pkg
+# Loading work.tb_jtag_sv_unit(fast)
+# Loading work.tb_jtag(fast)
+# Loading work.jtag_if(fast)
+# Loading work.jtag_types_pkg(fast)
+# Loading work.jtag(fast)
+# Loading work.adder_if(fast)
+# Loading work.bsr_if(fast)
+# Loading work.instruction_decoder_if(fast)
+# Loading work.instruction_reg_if(fast)
+# Loading work.tap_ctrl_if(fast)
+# Loading work.output_logic_if(fast)
+# Loading work.adder_Nbit(fast)
+# Loading work.bsr(fast)
+# Loading work.instruction_decoder(fast)
+# Loading work.instruction_reg(fast)
+# Loading work.tap_ctrl(fast)
+# Loading work.output_logic(fast)
+# Loading /package/eda/mg/questa10.6b/questasim/uvm-1.2.questa_uvm_pkg(fast)
+# Loading work.jtag_if(fast)
+# Compiling /tmp/socet154@asicfab.ecn.purdue.edu_dpi_94233/linux_x86_64_gcc-5.3.0/exportwrapper.c
+# Loading /tmp/socet154@asicfab.ecn.purdue.edu_dpi_94233/linux_x86_64_gcc-5.3.0/vsim_auto_compile.so
+# Loading /package/eda/mg/questa10.6b/questasim/uvm-1.2/linux_x86_64/uvm_dpi.so
+# coverage save -onexit coverage.ucdb
+# run -all
+# UVM_INFO verilog_src/uvm-1.2/src/base/uvm_root.svh(392) @ 0: reporter [UVM/RELNOTES] 
+# ----------------------------------------------------------------
+# UVM-1.2
+# (C) 2007-2014 Mentor Graphics Corporation
+# (C) 2007-2014 Cadence Design Systems, Inc.
+# (C) 2006-2014 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# (C) 2013-2014 NVIDIA Corporation
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO @ 0: reporter [RNTST] Running test extest_test...
+#                    0 Starting sequence run_phase
+# UVM_INFO @ 2040: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 11
+# scan_system_logic_out: 22
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 11
+# scan_system_logic_out: 22
+# 
+# UVM_INFO @ 2040: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 4120: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 27
+# scan_system_logic_out: 16
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 27
+# scan_system_logic_out: 16
+# 
+# UVM_INFO @ 4120: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 6200: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 29
+# scan_system_logic_out: 23
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 29
+# scan_system_logic_out: 23
+# 
+# UVM_INFO @ 6200: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 8280: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out:  5
+# scan_system_logic_out: 24
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out:  5
+# scan_system_logic_out: 24
+# 
+# UVM_INFO @ 8280: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 10360: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 16
+# scan_system_logic_out: 20
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 16
+# scan_system_logic_out: 20
+# 
+# UVM_INFO @ 10360: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 12440: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 15
+# scan_system_logic_out: 24
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 15
+# scan_system_logic_out: 24
+# 
+# UVM_INFO @ 12440: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 14520: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out:  8
+# scan_system_logic_out:  9
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out:  8
+# scan_system_logic_out:  9
+# 
+# UVM_INFO @ 14520: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 16600: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 19
+# scan_system_logic_out: 15
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 19
+# scan_system_logic_out: 15
+# 
+# UVM_INFO @ 16600: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 18680: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out:  5
+# scan_system_logic_out: 14
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out:  5
+# scan_system_logic_out: 14
+# 
+# UVM_INFO @ 18680: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 20760: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out:  8
+# scan_system_logic_out: 14
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out:  8
+# scan_system_logic_out: 14
+# 
+# UVM_INFO @ 20760: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 22840: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 18
+# scan_system_logic_out: 14
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 18
+# scan_system_logic_out: 14
+# 
+# UVM_INFO @ 22840: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 24920: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 12
+# scan_system_logic_out: 19
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 12
+# scan_system_logic_out: 19
+# 
+# UVM_INFO @ 24920: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 27000: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 11
+# scan_system_logic_out: 14
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 11
+# scan_system_logic_out: 14
+# 
+# UVM_INFO @ 27000: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 29080: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 16
+# scan_system_logic_out: 17
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 16
+# scan_system_logic_out: 17
+# 
+# UVM_INFO @ 29080: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 31160: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 17
+# scan_system_logic_out: 10
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 17
+# scan_system_logic_out: 10
+# 
+# UVM_INFO @ 31160: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 33240: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 15
+# scan_system_logic_out: 27
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 15
+# scan_system_logic_out: 27
+# 
+# UVM_INFO @ 33240: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 35320: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 21
+# scan_system_logic_out: 13
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 21
+# scan_system_logic_out: 13
+# 
+# UVM_INFO @ 35320: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 37400: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 10
+# scan_system_logic_out: 13
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 10
+# scan_system_logic_out: 13
+# 
+# UVM_INFO @ 37400: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 39480: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 12
+# scan_system_logic_out: 19
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 12
+# scan_system_logic_out: 19
+# 
+# UVM_INFO @ 39480: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 41560: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 29
+# scan_system_logic_out: 21
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 29
+# scan_system_logic_out: 21
+# 
+# UVM_INFO @ 41560: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 43640: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 25
+# scan_system_logic_out: 14
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 25
+# scan_system_logic_out: 14
+# 
+# UVM_INFO @ 43640: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 45720: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out:  9
+# scan_system_logic_out: 11
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out:  9
+# scan_system_logic_out: 11
+# 
+# UVM_INFO @ 45720: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 47800: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out:  7
+# scan_system_logic_out: 14
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out:  7
+# scan_system_logic_out: 14
+# 
+# UVM_INFO @ 47800: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 49880: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 17
+# scan_system_logic_out: 27
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 17
+# scan_system_logic_out: 27
+# 
+# UVM_INFO @ 49880: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 51960: uvm_test_top.env.comp [Comparator] 
+# Expected:
+# capture_system_logic_out: 18
+# scan_system_logic_out:  7
+# ~~~~~~~~~~
+# Actual:
+# capture_system_logic_out: 18
+# scan_system_logic_out:  7
+# 
+# UVM_INFO @ 51960: uvm_test_top.env.comp [Comparator] Data match
+# UVM_INFO @ 52100: uvm_test_top.env.comp [Comparator] Matches:    25
+# UVM_INFO @ 52100: uvm_test_top.env.comp [Comparator] Mismatches: 0
+# UVM_INFO verilog_src/uvm-1.2/src/base/uvm_report_server.svh(847) @ 52100: reporter [UVM/REPORT/SERVER] 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :   54
+# UVM_WARNING :    0
+# UVM_ERROR :    0
+# UVM_FATAL :    0
+# ** Report counts by id
+# [Comparator]    52
+# [RNTST]     1
+# [UVM/RELNOTES]     1
+# 
+# ** Note: $finish    : /package/eda/mg/questa10.6b/questasim/linux_x86_64/../verilog_src/uvm-1.2/src/base/uvm_root.svh(517)
+#    Time: 52100 ns  Iteration: 120  Instance: /tb_jtag
+# Saving coverage database on exit...
+# End time: 11:19:19 on Jan 18,2024, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0

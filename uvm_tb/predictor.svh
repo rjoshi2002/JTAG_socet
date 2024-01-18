@@ -22,7 +22,7 @@ class jtag_predictor extends uvm_subscriber#(jtag_transaction);
 
     // calculate expected sum and expected overflow
     output_tx.capture_system_logic_out = (t.parallel_in[3:0] + t.parallel_in[7:4] + t.parallel_in[8]);
-    output_tx.scan_system_logic_out = (t.tap_series[8:5] + t.tap_series[12:9] + t.tap_series[13]);
+    output_tx.scan_system_logic_out = (t.tap_series[3:0] + t.tap_series[7:4] + t.tap_series[8]);
     // send expected output to scoreboard
     pred_ap.write(output_tx);
   endfunction: write

@@ -1,0 +1,21 @@
+QuestaSim-64 vlog 10.6b Compiler 2017.05 May 25 2017
+Start time: 17:07:03 on Jan 17,2024
+vlog "+incdir+src+uvm_tb+include" "+sv" src/bsr.sv "+sv" tb/bsr_tb.sv -logfile normal_tb_compile.log -printinfilenames=normal_file_search.log 
+-- Compiling package jtag_types_pkg
+-- Compiling interface bsr_if
+-- Importing package jtag_types_pkg
+-- Compiling module bsr
+** Warning: ** while parsing file included at tb/bsr_tb.sv(2)
+** while parsing file included at include/bsr_if.vh(4)
+** at include/jtag_types_pkg.vh(10): (vlog-2275) 'jtag_types_pkg' already exists and will be overwritten.
+-- Compiling package jtag_types_pkg
+** Warning: ** while parsing file included at tb/bsr_tb.sv(2)
+** at include/bsr_if.vh(8): (vlog-2275) 'bsr_if' already exists and will be overwritten.
+-- Compiling interface bsr_if
+-- Compiling module bsr_tb
+-- Compiling program test
+
+Top level modules:
+	bsr_tb
+End time: 17:07:03 on Jan 17,2024, Elapsed time: 0:00:00
+Errors: 0, Warnings: 2

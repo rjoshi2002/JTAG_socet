@@ -29,7 +29,7 @@ class jtag_monitor extends uvm_monitor;
     forever begin
       jtag_transaction tx;
       tx = jtag_transaction#(5,9,5)::type_id::create("tx");
-      @(posedge vif.TCK);
+      @(negedge vif.TCK);
       // Capture activity between the driver and DUT
       tx.parallel_in = vif.parallel_in;
       tx.instruction = vif.instruction;
