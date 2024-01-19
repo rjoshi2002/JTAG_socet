@@ -8,6 +8,7 @@
 
 
 `include "bpr_if.vh"
+`include "jtag_types_pkg.vh"
 
 module bpr(
     input logic TCK, TRST,
