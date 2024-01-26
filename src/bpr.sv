@@ -15,15 +15,16 @@ module bpr(
     bpr_if.BPR bprif
 );
 
-    always_comb begin : bpr_comb
-        next_TDI = bprif.TDI
+    logic next_TDO;
 
-        if (bprif.CaptureDR) begin
-            next_TDI = 1'b0
+    always_comb begin : bpr_comb
+        next_TDO = bprif.TDI;
+
+        if (bprif.ShiftDR && bprif.bpr_select) begin
+            next_TDO = bprif.TDI;
         end
-        else if (bprif.ShiftDR) begin
-            next_TDI = bprif.TDI
-        end
+        else if(bprif.tlr_reset)
+            next_TDO = 1'b0;
     end
 
     always_ff @ (posedge TCK, negedge TRST) begin : bpr_ff
@@ -31,7 +32,7 @@ module bpr(
             bprif.TDO <= 1'b0;
         end
         else begin
-            bprif.TDO <= next_TDI;
+            bprif.TDO <= next_TDO;
         end
     end
 

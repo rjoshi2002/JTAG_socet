@@ -16,6 +16,7 @@ interface jtag_if #(parameter NUM_IN = 9, parameter NUM_OUT = 5);
     //logic [4:0] scan_out; // For UVM testbench to do the test
     logic [NUM_IN - 1: 0] parallel_in;
     logic [NUM_OUT - 1: 0] parallel_out;
+    logic [NUM_IN + NUM_OUT - 1: 0] sr_parallel_out; // Used for storing the TDOs.
     // jtag port
 
     //UVM testbench signal
@@ -28,11 +29,11 @@ interface jtag_if #(parameter NUM_IN = 9, parameter NUM_OUT = 5);
 
     modport jtag (
         input TCK, clk, TDI, TMS,  parallel_in, TRST, nRST, 
-        output TDO, parallel_out
+        output TDO, parallel_out, sr_parallel_out
     );
 
     modport tb (
-        input TCK, clk, TDO,  parallel_out, 
+        input TCK, clk, TDO,  parallel_out, sr_parallel_out, 
         output TDI, TMS,  parallel_in, TRST, nRST
     );
 

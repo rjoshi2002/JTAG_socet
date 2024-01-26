@@ -18,30 +18,32 @@ module idr(
     logic [3:0] ver;
     logic [15:0] part;
     logic [10:0] id;
-    // logic [31:0] code;
+    logic [31:0] code;
     logic [31:0] next_code;
 
     assign ver = 4'b0001;
     assign part = 16'b0000000000000001;
     assign id = 11'b00000000001;
+    assign idrif.TDO = code[0];
 
     always_comb begin : idr_comb
         next_code = idrif.code;
-
-        // if (bprif.ShiftDR) begin
-        //     next_TDI = 1'b0
-        // end
-        if (idrif.CaptureDR) begin
+        if (idrif.CaptureDR && idrif.idr_select) begin
             next_code[31:28] = ver;
             next_code[27:12] = part;
             next_code[11:1] = id;
             next_code[0] = 1'b1;
         end
+        else if(idrif.ShiftDR && idrif.idr_select) begin
+            next_code = {idrif.TDI, code[31:1]}; // LSB shift first
+        end
+        else if(idrif.tlr_reset)
+            next_code = {ver, part, id, 1'b1};
     end
 
     always_ff @ (posedge TCK, negedge TRST) begin : idr_ff
         if (TRST == 1'b0) begin
-            idrif.code <= '0;
+            idrif.code <= {ver, part, id, 1'b1};
         end
         
         else begin
