@@ -34,19 +34,23 @@ class jtag_monitor extends uvm_monitor;
       tx.parallel_in = vif.parallel_in;
       tx.instruction = vif.instruction;
       tx.tap_series = vif.tap_series;
+      tx.sr_parallel_out = '0;
       if (!tx.input_equal(prev_tx)) begin // if new transaction has been sent
-        jtag_ap.write(tx);
-        // get outputs from DUT and send to scoreboard/comparator
-        // wait until check is asserted
-        while(!vif.capture_check) begin
-            @(negedge vif.TCK);
+        if((vif.instruction == 5'b00011) || (vif.instruction == 5'b00010)) begin // EXTEST or PRELOAD
+          jtag_ap.write(tx);
+          // get outputs from DUT and send to scoreboard/comparator
+          // wait until check is asserted
+          while(!vif.capture_check) begin
+              @(negedge vif.TCK);
+          end
+          tx.capture_system_logic_out = vif.parallel_out;
+          while(!vif.scan_check) begin
+              @(negedge vif.TCK);
+          end
+          tx.scan_system_logic_out = vif.parallel_out;
+          tx.sr_parallel_out = vif.sr_parallel_out;
+          result_ap.write(tx);
         end
-        tx.capture_system_logic_out = vif.parallel_out;
-        while(!vif.scan_check) begin
-            @(negedge vif.TCK);
-        end
-        tx.scan_system_logic_out = vif.parallel_out;
-        result_ap.write(tx);
         prev_tx.copy(tx);
       end
     end

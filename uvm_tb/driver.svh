@@ -27,12 +27,21 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
       vif.instruction = req_item.instruction;
       vif.tap_series = req_item.tap_series;
       DUT_reset();
+      vif.TMS = 1'b0;
+      @(negedge vif.TCK); // IDLE
+      set_instr(req_item.instruction);
       if(req_item.instruction == 5'b00011) begin //EXTEST
-        vif.TMS = 1'b0;
-        @(negedge vif.TCK); // IDLE
-        set_instr(req_item.instruction);
         dr_capture(); // Capture the parallel input to adder
         dr_capture(); // Capture the adder output 
+        vif.capture_check = 1;
+        @(negedge vif.TCK); // IDLE
+        dr_scanin(req_item.tap_series); // Scan in the adder input through TDI
+        dr_capture(); // Capture the adder output 
+        vif.scan_check = 1;
+        @(negedge vif.TCK); // IDLE
+      end
+      else if(req_item.instruction == 5'b00010) begin // PRELOAD
+        dr_capture(); // Capture the parallel input and system output and update them to output register
         vif.capture_check = 1;
         @(negedge vif.TCK); // IDLE
         dr_scanin(req_item.tap_series); // Scan in the adder input through TDI
