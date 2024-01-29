@@ -37,7 +37,7 @@ class extest_test extends uvm_test;
 endclass: extest_test
 
 class preload_test extends uvm_test;
-  `uvm_component_utils(extest_test)
+  `uvm_component_utils(preload_test)
 
   environment env;
   virtual jtag_if vif;

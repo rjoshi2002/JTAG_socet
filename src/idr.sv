@@ -27,7 +27,7 @@ module idr(
     assign idrif.TDO = code[0];
 
     always_comb begin : idr_comb
-        next_code = idrif.code;
+        next_code = code;
         if (idrif.CaptureDR && idrif.idr_select) begin
             next_code[31:28] = ver;
             next_code[27:12] = part;
@@ -43,11 +43,11 @@ module idr(
 
     always_ff @ (posedge TCK, negedge TRST) begin : idr_ff
         if (TRST == 1'b0) begin
-            idrif.code <= {ver, part, id, 1'b1};
+            code <= {ver, part, id, 1'b1};
         end
         
         else begin
-            idrif.code <= next_code;
+            code <= next_code;
         end
     end
 

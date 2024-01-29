@@ -41,7 +41,7 @@ module jtag(
     instruction_reg      INS_REG(jtif.TCK, jtif.TRST, irif);
     tap_ctrl             TAP_CTRL(jtif.TCK, jtif.TRST, tcif);
     output_logic         OUTPUT_LOGIC(jtif.TCK, jtif.TRST, olif);
-    flex_stp_sr   #(.NUM_BITS(NUM_IN + NUM_OUT), .MSB(0))   SHIFT_REGISTER  (jtif.TCK, jtif.TRST, tcif.dr_shift, olif.TDO, jtif.sr_parallel_out);
+    flex_stp_sr   #(.NUM_BITS(NUM_IN + NUM_OUT), .SHIFT_MSB(1))   SHIFT_REGISTER  (jtif.TCK, jtif.TRST, tcif.dr_shift, olif.TDO, jtif.sr_parallel_out);
 
     /*Input Signal Assign*/
     //4-bit adder(To test the functionality of BSR)

@@ -10,6 +10,7 @@ class jtag_transaction #(parameter INSTRUCTION_BITS = 5, parameter NUM_IN = 9, p
   rand bit [NUM_IN + NUM_OUT - 1:0] tap_series;
   bit [NUM_OUT - 1:0] capture_system_logic_out;
   bit [NUM_OUT - 1:0] scan_system_logic_out;
+  bit [NUM_OUT + NUM_IN -1: 0] sr_parallel_out;
 
   `uvm_object_utils_begin(jtag_transaction)
     `uvm_field_int(instruction, UVM_NOCOMPARE)
@@ -17,6 +18,7 @@ class jtag_transaction #(parameter INSTRUCTION_BITS = 5, parameter NUM_IN = 9, p
     `uvm_field_int(tap_series, UVM_NOCOMPARE)
     `uvm_field_int(capture_system_logic_out, UVM_DEFAULT)
     `uvm_field_int(scan_system_logic_out, UVM_DEFAULT)
+    `uvm_field_int(sr_parallel_out, UVM_DEFAULT)
   `uvm_object_utils_end
 
   // add constrains for randomization

@@ -13,7 +13,7 @@ class extest_sequence extends uvm_sequence#(jtag_transaction);
     jtag_transaction req_item;
     req_item = jtag_transaction#(5,9,5)::type_id::create("req_item");
 
-    // repeat 25 randomized test cases
+    // repeat 100 randomized test cases
     repeat(100) begin
       start_item(req_item);
       if(!req_item.randomize()) begin
@@ -26,7 +26,7 @@ class extest_sequence extends uvm_sequence#(jtag_transaction);
 endclass
 
 class preload_sequence extends uvm_sequence#(jtag_transaction);
-  `uvm_object_utils(extest_sequence)
+  `uvm_object_utils(preload_sequence)
 
   function new(string name = "");
     super.new(name);
@@ -36,7 +36,7 @@ class preload_sequence extends uvm_sequence#(jtag_transaction);
     jtag_transaction req_item;
     req_item = jtag_transaction#(5,9,5)::type_id::create("req_item");
 
-    // repeat 25 randomized test cases
+    // repeat 100 randomized test cases
     repeat(100) begin
       start_item(req_item);
       if(!req_item.randomize()) begin

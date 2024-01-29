@@ -7,9 +7,9 @@ IFDIR = include
 # name of top-level testbench module
 TBTOP= tb_jtag.sv
 # name of UVM test to be run
-TESTNAME= extest_test
+TESTNAME= preload_test
 # uvm source file
-UVM_SRC_FILES = src/adder_Nbit.sv src/bsr.sv src/instruction_decoder.sv src/instruction_reg.sv src/jtag.sv src/output_logic.sv src/tap_ctrl.sv
+UVM_SRC_FILES = src/adder_Nbit.sv src/bsr.sv src/instruction_decoder.sv src/instruction_reg.sv src/jtag.sv src/output_logic.sv src/tap_ctrl.sv src/idr.sv src/bpr.sv src/flex_stp_sr.sv
 # normal file
 SRC_FILES = src/bsr.sv
 # Select the Cell Library to use with simulations
