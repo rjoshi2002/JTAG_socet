@@ -1,0 +1,88 @@
+QuestaSim-64 vlog 10.6b Compiler 2017.05 May 25 2017
+Start time: 20:48:02 on Feb 10,2024
+vlog "+incdir+src+uvm_tb+include" "+sv" include/jtag_types_pkg.sv src/adder_Nbit.sv src/bsr.sv src/instruction_decoder.sv src/instruction_reg.sv src/jtag.sv src/output_logic.sv src/tap_ctrl.sv src/idr.sv src/bpr.sv src/flex_stp_sr.sv "+acc" "+cover" -L /package/eda/mg/questa10.6b/questasim/uvm-1.2 uvm_tb/tb_jtag.sv -logfile tb_compile.log -printinfilenames=file_search.log 
+-- Compiling package jtag_types_pkg
+-- Compiling interface adder_if
+-- Compiling module adder_Nbit
+** Warning: ** while parsing file included at src/bsr.sv(13)
+** while parsing file included at include/bsr_if.vh(4)
+** at include/jtag_types_pkg.vh(10): (vlog-2275) 'jtag_types_pkg' already exists and will be overwritten.
+-- Compiling package jtag_types_pkg
+-- Compiling interface bsr_if
+-- Importing package jtag_types_pkg
+-- Compiling module bsr
+-- Compiling interface instruction_decoder_if
+-- Compiling module instruction_decoder
+-- Compiling interface instruction_reg_if
+-- Compiling module instruction_reg
+** Warning: ** while parsing file included at src/jtag.sv(5)
+** at include/adder_if.vh(4): (vlog-2275) 'adder_if' already exists and will be overwritten.
+-- Compiling interface adder_if
+** Warning: ** while parsing file included at src/jtag.sv(6)
+** while parsing file included at include/bsr_if.vh(4)
+** at include/jtag_types_pkg.vh(10): (vlog-2275) 'jtag_types_pkg' already exists and will be overwritten.
+-- Compiling package jtag_types_pkg
+** Warning: ** while parsing file included at src/jtag.sv(6)
+** at include/bsr_if.vh(8): (vlog-2275) 'bsr_if' already exists and will be overwritten.
+-- Compiling interface bsr_if
+-- Compiling interface idr_if
+-- Compiling interface bpr_if
+** Warning: ** while parsing file included at src/jtag.sv(9)
+** at include/instruction_decoder_if.vh(9): (vlog-2275) 'instruction_decoder_if' already exists and will be overwritten.
+-- Compiling interface instruction_decoder_if
+** Warning: ** while parsing file included at src/jtag.sv(10)
+** at include/instruction_reg_if.vh(11): (vlog-2275) 'instruction_reg_if' already exists and will be overwritten.
+-- Compiling interface instruction_reg_if
+-- Compiling interface tap_ctrl_if
+-- Compiling interface jtag_if
+-- Compiling interface output_logic_if
+-- Compiling module jtag
+** Warning: ** while parsing file included at src/output_logic.sv(9)
+** at include/output_logic_if.vh(7): (vlog-2275) 'output_logic_if' already exists and will be overwritten.
+-- Compiling interface output_logic_if
+-- Compiling module output_logic
+** Warning: ** while parsing file included at src/tap_ctrl.sv(4)
+** at include/tap_ctrl_if.vh(9): (vlog-2275) 'tap_ctrl_if' already exists and will be overwritten.
+-- Compiling interface tap_ctrl_if
+-- Compiling module tap_ctrl
+** Warning: ** while parsing file included at src/idr.sv(10)
+** while parsing file included at include/idr_if.vh(2)
+** at include/jtag_types_pkg.vh(10): (vlog-2275) 'jtag_types_pkg' already exists and will be overwritten.
+-- Compiling package jtag_types_pkg
+** Warning: ** while parsing file included at src/idr.sv(10)
+** at include/idr_if.vh(5): (vlog-2275) 'idr_if' already exists and will be overwritten.
+-- Compiling interface idr_if
+-- Compiling module idr
+** Warning: ** while parsing file included at src/bpr.sv(10)
+** while parsing file included at include/bpr_if.vh(2)
+** at include/jtag_types_pkg.vh(10): (vlog-2275) 'jtag_types_pkg' already exists and will be overwritten.
+-- Compiling package jtag_types_pkg
+** Warning: ** while parsing file included at src/bpr.sv(10)
+** at include/bpr_if.vh(5): (vlog-2275) 'bpr_if' already exists and will be overwritten.
+-- Compiling interface bpr_if
+-- Compiling module bpr
+-- Compiling module flex_stp_sr
+** Warning: ** while parsing file included at uvm_tb/tb_jtag.sv(2)
+** while parsing file included at src/jtag.sv(5)
+** at include/adder_if.vh(4): (vlog-2275) 'adder_if' already exists and will be overwritten.
+** Note: (vlog-2286) uvm_tb/test.svh(2): Using implicit +incdir+/package/eda/mg/questa10.6b/questasim/uvm-1.2/../verilog_src/uvm-1.2/src from import uvm_pkg
+-- Compiling package tb_jtag_sv_unit
+-- Importing package /package/eda/mg/questa10.6b/questasim/uvm-1.2.uvm_pkg (uvm-1.2 Built-in)
+-- Compiling interface adder_if
+-- Compiling package jtag_types_pkg
+-- Compiling interface bsr_if
+-- Importing package jtag_types_pkg
+-- Compiling interface idr_if
+-- Compiling interface bpr_if
+-- Compiling interface instruction_decoder_if
+-- Compiling interface instruction_reg_if
+-- Compiling interface tap_ctrl_if
+-- Compiling interface jtag_if
+-- Compiling interface output_logic_if
+-- Compiling module jtag
+-- Compiling module tb_jtag
+
+Top level modules:
+	tb_jtag
+End time: 20:48:03 on Feb 10,2024, Elapsed time: 0:00:01
+Errors: 0, Warnings: 13

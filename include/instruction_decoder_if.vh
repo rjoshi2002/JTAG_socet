@@ -1,5 +1,5 @@
 /* Made by Wen-Bo Hung, 2023/11/2
-    email: hong395@purdue.edu, peterhouse08271026@gmail.com*/
+    email: hong395@purdue.edu*/
 // JTAG SoCET team
 // If tmp controller is added, decoder don't need to decide bsr mode
 // five data register: bsr, id reg, bypass reg, tmp_status reg, ahb reg

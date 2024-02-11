@@ -11,10 +11,10 @@ TESTNAME= preload_test
 # uvm source file
 UVM_SRC_FILES = src/adder_Nbit.sv src/bsr.sv src/instruction_decoder.sv src/instruction_reg.sv src/jtag.sv src/output_logic.sv src/tap_ctrl.sv src/idr.sv src/bpr.sv src/flex_stp_sr.sv
 # normal file
-SRC_FILES = src/bsr.sv
+SRC_FILES = src/fifo.sv
 # Select the Cell Library to use with simulations
 GATE_LIB		:= $(AMI_05_LIB)
-TESTBENCH        = tb/bsr_tb.sv
+TESTBENCH        = tb/fifo_tb.sv
 # Please add in extra files needed for specific simulations here
 OSU05_STD_CELL := osu05/osu05_stdcells.v
 build:
@@ -25,7 +25,7 @@ build:
 	-printinfilenames=normal_file_search.log
 
 run: build
-	vsim -c bsr_tb \
+	vsim -c fifo_tb \
 	-voptargs=+acc\
 	-coverage \
 	+no_glitch_msg -suppress 12110 \
