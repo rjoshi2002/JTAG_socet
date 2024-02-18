@@ -35,8 +35,10 @@ class comparator extends uvm_scoreboard;
     forever begin
       expected_fifo.get(expected_tx);
       actual_fifo.get(actual_tx);
-      uvm_report_info("Comparator", $psprintf("\nExpected:\ncapture_system_logic_out: %d\nscan_system_logic_out: %d\n~~~~~~~~~~\nActual:\ncapture_system_logic_out: %d\nscan_system_logic_out: %d\n", expected_tx.capture_system_logic_out, expected_tx.scan_system_logic_out, actual_tx.capture_system_logic_out, actual_tx.scan_system_logic_out), UVM_LOW);
-
+      if((expected_tx.instruction == 5'b00010) || (expected_tx.instruction == 5'b00011)) // EXTEST and PRELOAD
+        uvm_report_info("Comparator", $psprintf("\nExpected:\ncapture_system_logic_out: %d\nscan_system_logic_out: %d\n~~~~~~~~~~\nActual:\ncapture_system_logic_out: %d\nscan_system_logic_out: %d\n", expected_tx.capture_system_logic_out, expected_tx.scan_system_logic_out, actual_tx.capture_system_logic_out, actual_tx.scan_system_logic_out), UVM_LOW);
+      else if(expected_tx.instruction == 5'b00100) // IDCODE
+        uvm_report_info("Comparator", $psprintf("\nExpected:\nid_code: %d\n~~~~~~~~~~\nActual:\nid_code: %d\n", expected_tx.id_code, actual_tx.id_code), UVM_LOW);
       // keep count of number of matches and mismatches (actual vs expected)
       if (expected_tx.compare(actual_tx)) begin
         m_matches++;

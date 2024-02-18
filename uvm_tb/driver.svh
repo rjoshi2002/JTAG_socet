@@ -35,7 +35,7 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
         dr_capture(); // Capture the adder output 
         vif.capture_check = 1;
         @(negedge vif.TCK); // IDLE
-        dr_scanin(req_item.tap_series); // Scan in the adder input through TDI
+        dr_scanin(req_item.tap_series, 14); // Scan in the adder input through TDI
         dr_capture(); // Capture the adder output 
         vif.scan_check = 1;
         @(negedge vif.TCK); // IDLE
@@ -44,9 +44,14 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
         dr_capture(); // Capture the parallel input and system output and update them to output register
         vif.capture_check = 1;
         @(negedge vif.TCK); // IDLE
-        dr_scanin(req_item.tap_series); // Scan in the adder input through TDI
+        dr_scanin(req_item.tap_series, 14); // Scan in the adder input through TDI
         dr_capture(); // Capture the adder output 
         vif.scan_check = 1;
+        @(negedge vif.TCK); // IDLE
+      end
+      else if(req_item.instruction == 5'b00100) begin // IDCODE
+        dr_scanin('1, 32);
+        vif.id_check = 1;
         @(negedge vif.TCK); // IDLE
       end
       #(0.2)
@@ -58,6 +63,7 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
   task DUT_reset();
     vif.capture_check = 0;
     vif.scan_check = 0;
+    vif.id_check = 0;
     vif.TRST = 0;
     vif.nRST = 0;
     vif.TMS = 1;
@@ -109,16 +115,20 @@ class jtag_driver extends uvm_driver#(jtag_transaction);
 
   task dr_scanin;
   input logic [13:0] data;
+  input integer times;
   begin
     vif.TMS = 1'b1;
     @(negedge vif.TCK);
     vif.TMS = 1'b0;
-    @(negedge vif.TCK); // Update DR
+    @(negedge vif.TCK); // Capture DR
     vif.TMS = 1'b0;
     @(negedge vif.TCK); // Shift DR
-    for(int i = 13; i >=0; i--) begin
-      vif.TDI = data[i]; // Shift in MSB first
-      if(i == 0)
+    for(int i = 0; i < times; i++) begin
+      if(i < 14)
+        vif.TDI = data[i]; // Shift in LSB first
+      else
+        vif.TDI = 1'b1;
+      if(i == times - 1)
         vif.TMS = 1'b1;
       @(negedge vif.TCK);
     end
