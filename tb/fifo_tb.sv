@@ -131,7 +131,7 @@ program test(
         tb_test_num++;
         tb_test_case = "Write the data until full";
         reset();
-        for(int i = 1; i < 65; i++) begin
+        for(int i = 1; i < 66; i++) begin
             store_data(i);
         end
         check_output(8'd1, 1'b1, 1'b0); // Check full

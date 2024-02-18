@@ -32,7 +32,7 @@ run: build
 	-do "coverage save -onexit coverage.ucdb" -do "run -all" &
 
 run_gui: build
-	vsim -i bsr_tb \
+	vsim -i fifo_tb \
 	-voptargs=+acc\
 	-coverage \
 	+no_glitch_msg -suppress 12110 \
