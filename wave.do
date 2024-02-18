@@ -67,8 +67,16 @@ add wave -noupdate -expand -group {Output logic} /tb_jtag/JTAG/olif/ahb
 add wave -noupdate -expand -group {Output logic} /tb_jtag/JTAG/olif/idcode
 add wave -noupdate -expand -group {Output logic} /tb_jtag/JTAG/olif/ahb_error
 add wave -noupdate -expand -group {Output logic} /tb_jtag/JTAG/olif/tlr_reset
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/NUM_BITS
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/SHIFT_MSB
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/clk
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/n_rst
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/shift_enable
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/serial_in
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/parallel_out
+add wave -noupdate -expand -group {Shift Register} /tb_jtag/JTAG/SHIFT_REGISTER/next_output
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {600 ns} 0}
+WaveRestoreCursors {{Cursor 1} {1170 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 252
 configure wave -valuecolwidth 144

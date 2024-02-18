@@ -30,7 +30,7 @@ module bsr(
   logic [NUM_OUT - 1: 0] nxt_outputff2;
 
   //TDO
-  assign bsrif.TDO = scan2[NUM_OUT-1];
+  assign bsrif.TDO = scan2[0];
 
   //capture flip flop
   always_ff @(posedge TCK, negedge TRST)
@@ -55,13 +55,13 @@ module bsr(
       nxt_scan2 = bsrif.parallel_system_logic_out;
     end
     else if(bsrif.dr_shift && bsrif.bsr_select) begin // Data Scan in from TDI
-      nxt_scan1[0] = bsrif.TDI;
-      for(i = 1; i < NUM_IN; i++) begin
-        nxt_scan1[i] = scan1[i-1];
+      nxt_scan1[NUM_IN-1] = bsrif.TDI;
+      for(i = 0; i < (NUM_IN-1); i++) begin
+        nxt_scan1[i] = scan1[i+1];
       end
-      nxt_scan2[0] = scan1[NUM_IN-1];
-      for(j = 1; j < NUM_OUT; j++) begin
-        nxt_scan2[j] = scan2[j-1];
+      nxt_scan2[NUM_OUT-1] = scan1[0];
+      for(j = 0; j < (NUM_OUT-1); j++) begin
+        nxt_scan2[j] = scan2[j+1];
       end
     end
   end

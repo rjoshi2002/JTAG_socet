@@ -16,13 +16,14 @@ interface jtag_if #(parameter NUM_IN = 9, parameter NUM_OUT = 5);
     //logic [4:0] scan_out; // For UVM testbench to do the test
     logic [NUM_IN - 1: 0] parallel_in;
     logic [NUM_OUT - 1: 0] parallel_out;
-    logic [NUM_IN + NUM_OUT - 1: 0] sr_parallel_out; // Used for storing the TDOs.
+    logic [31: 0] sr_parallel_out; // Used for storing the TDOs.
     // jtag port
 
     //UVM testbench signal
     //Handshake signal between driver and monitor
     logic capture_check = 1;
     logic scan_check = 1;
+    logic id_check = 1;
     // record the transaction field
     logic [4:0] instruction;
     logic [NUM_IN + NUM_OUT - 1:0] tap_series;

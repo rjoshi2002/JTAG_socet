@@ -48,7 +48,20 @@ class jtag_monitor extends uvm_monitor;
               @(negedge vif.TCK);
           end
           tx.scan_system_logic_out = vif.parallel_out;
-          tx.sr_parallel_out = vif.sr_parallel_out;
+          tx.sr_parallel_out = vif.sr_parallel_out[31:18];
+          tx.id_code = '0;
+          result_ap.write(tx);
+        end
+        else if(vif.instruction == 5'b00100) begin // IDCODE
+          jtag_ap.write(tx);
+          // get outputs from DUT and send to scoreboard/comparator
+          while(!vif.id_check) begin
+              @(negedge vif.TCK);
+          end
+          tx.capture_system_logic_out = '0;
+          tx.scan_system_logic_out = '0;
+          tx.sr_parallel_out = '0;
+          tx.id_code = vif.sr_parallel_out;
           result_ap.write(tx);
         end
         prev_tx.copy(tx);
