@@ -28,13 +28,13 @@ module idr(
 
     always_comb begin : idr_comb
         next_code = code;
-        if (idrif.CaptureDR && idrif.idr_select) begin
+        if (idrif.dr_capture && idrif.idr_select) begin
             next_code[31:28] = ver;
             next_code[27:12] = part;
             next_code[11:1] = id;
             next_code[0] = 1'b1;
         end
-        else if(idrif.ShiftDR && idrif.idr_select) begin
+        else if(idrif.dr_shift && idrif.idr_select) begin
             next_code = {idrif.TDI, code[31:1]}; // LSB shift first
         end
         else if(idrif.tlr_reset)

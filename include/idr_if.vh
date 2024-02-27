@@ -7,13 +7,13 @@ interface idr_if;
 import jtag_types_pkg::*;
     logic TDI, TDO;
     // logic [31:0] code;
-    logic CaptureDR, ShiftDR;
+    logic dr_capture, dr_shift;
 	logic idr_select;
 	logic tlr_reset;
 
 	modport IDR
 	(
-		input CaptureDR, ShiftDR, TDI, idr_select, tlr_reset, 
+		input dr_capture, dr_shift, TDI, idr_select, tlr_reset, 
 		output TDO
 	);
 endinterface
