@@ -3,8 +3,8 @@
 `include "ahb_reg_if.vh"
 
 module ahb_reg(
-    input TCK,
-    input TRST,
+    input logic TCK,
+    input logic TRST,
     ahb_reg_if.IDR ahbif
 );
 
