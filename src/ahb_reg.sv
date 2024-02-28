@@ -47,37 +47,4 @@ module ahb_reg(
         end
     end    
 
-
-
-
-    // always_comb begin
-    //     nxt_roll_flag = '0;
-    //     nxt_count = count_out;
-
-    //     if (clear == 1'b1) begin
-    //         nxt_count = '0;
-    //         nxt_roll_flag = '0;
-    //     end
-
-    //     else if (count_enable == 1'b1) begin
-    //         if (rollover_val == count_out) 
-    //             nxt_count = 1;
-    //         else 
-    //             nxt_count = count_out + 1'b1;
-
-    //         if (rollover_val == nxt_count)
-    //             nxt_roll_flag = 1'b1; //raise this flag when the NCL reach (rollover_val == nxt_count)
-    //     end
-    // end
-
-    // always_ff @(posedge clk, negedge n_rst) begin
-    //     if (n_rst == 1'b0) begin
-    //         count_out <= '0;
-    //         rollover_flag <= 1'b0;
-    //     end
-    //     else begin
-    //         count_out <= nxt_count;
-    //         rollover_flag <= nxt_roll_flag;
-    //     end
-    // end
 endmodule
