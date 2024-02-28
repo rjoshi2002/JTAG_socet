@@ -18,12 +18,12 @@ module ahb_reg(
 
         if ((ahbif.ahb_select == 1'b1) && (ahbif.dr_update == 1'b1)) begin
             if (count < 6'd38) begin
-                if (adbif.TDI == 1'b1) begin
+                if (ahbif.TDI == 1'b1) begin
                     count_next = count + 1'd1;
                 end
             end
             else begin
-                if (adbif.TDI == 1'b1) begin
+                if (ahbif.TDI == 1'b1) begin
                     count_next = 1'd1;
                 end
                 else begin
