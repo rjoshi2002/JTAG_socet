@@ -29,7 +29,7 @@ always_comb begin : instruction_reg_control
 //Serial
 	if (IR.ir_capture) // Set a default value
 	begin
-		n_shift_reg = BYPASS;
+		n_shift_reg = 5'b00001; //Load 01 into bits closest to TDO and, optionally, design-specific data or fixed values into other bits closer to TDI
 	end
 	else if (IR.ir_shift) // Shift in LSB first
 	begin
