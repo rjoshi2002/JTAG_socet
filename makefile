@@ -11,10 +11,10 @@ TESTNAME= extest_test
 # uvm source file
 UVM_SRC_FILES = src/adder_Nbit.sv src/bsr.sv src/instruction_decoder.sv src/instruction_reg.sv src/jtag.sv src/output_logic.sv src/tap_ctrl.sv src/idr.sv src/bpr.sv src/flex_stp_sr.sv
 # normal file
-SRC_FILES = src/fifo.sv
+SRC_FILES = src/afifo.sv src/flex_fifo_mem.sv src/wptr.sv src/rptr.sv src/sync_low.sv src/flex_bin2gray.sv  
 # Select the Cell Library to use with simulations
 GATE_LIB		:= $(AMI_05_LIB)
-TESTBENCH        = tb/fifo_tb.sv
+TESTBENCH        = tb/afifo_tb.sv
 # Please add in extra files needed for specific simulations here
 OSU05_STD_CELL := osu05/osu05_stdcells.v
 build:
@@ -25,18 +25,21 @@ build:
 	-printinfilenames=normal_file_search.log
 
 run: build
-	vsim -c fifo_tb \
+	vsim -c afifo_tb \
 	-voptargs=+acc\
 	-coverage \
 	+no_glitch_msg -suppress 12110 \
+	-novopt
 	-do "coverage save -onexit coverage.ucdb" -do "run -all" &
 
 run_gui: build
-	vsim -i fifo_tb \
+	vsim -i afifo_tb \
 	-voptargs=+acc\
 	-coverage \
 	+no_glitch_msg -suppress 12110 \
+	-novopt
 	-do "coverage save -onexit coverage.ucdb" -do "run -all" &
+	
 
 uvm_build:
 	vlog +incdir+$(SRCDIR)+$(TBDIR)+$(IFDIR) \
