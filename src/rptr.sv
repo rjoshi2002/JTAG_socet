@@ -4,7 +4,7 @@
 `include "rptr_if.vh"
 `include "jtag_types_pkg.vh"
 module rptr #(parameter ADDR_WIDTH = 32)(
-    rptr_if.RPTR #(.ADDR_WIDTH(ADDR_WIDTH)) rpif
+    rptr_if.RPTR rpif
 );
 
 logic [ADDR_WIDTH-1:0] nxt_raddr;

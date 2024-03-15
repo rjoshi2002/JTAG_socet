@@ -1,0 +1,56 @@
+Open SystemVerilog file "src/afifo.sv"
+  Open include file  "include/afifo_if.vh" from "src/afifo.sv"(1)
+    Open include file  "include/jtag_types_pkg.vh" from "include/afifo_if.vh"(4)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/afifo_if.vh"(4)
+  Close include file "include/afifo_if.vh"; continuing at "src/afifo.sv"(1)
+  Open include file  "include/flex_fifo_mem_if.vh" from "src/afifo.sv"(2)
+    Open include file  "include/jtag_types_pkg.vh" from "include/flex_fifo_mem_if.vh"(5)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/flex_fifo_mem_if.vh"(5)
+  Close include file "include/flex_fifo_mem_if.vh"; continuing at "src/afifo.sv"(2)
+  Open include file  "include/wptr_if.vh" from "src/afifo.sv"(3)
+    Open include file  "include/jtag_types_pkg.vh" from "include/wptr_if.vh"(4)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/wptr_if.vh"(4)
+  Close include file "include/wptr_if.vh"; continuing at "src/afifo.sv"(3)
+  Open include file  "include/rptr_if.vh" from "src/afifo.sv"(4)
+    Open include file  "include/jtag_types_pkg.vh" from "include/rptr_if.vh"(4)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/rptr_if.vh"(4)
+  Close include file "include/rptr_if.vh"; continuing at "src/afifo.sv"(4)
+  Open include file  "include/jtag_types_pkg.vh" from "src/afifo.sv"(5)
+  Close include file "include/jtag_types_pkg.vh"; continuing at "src/afifo.sv"(5)
+Close file "src/afifo.sv"
+Open SystemVerilog file "src/flex_fifo_mem.sv"
+  Open include file  "include/flex_fifo_mem_if.vh" from "src/flex_fifo_mem.sv"(3)
+    Open include file  "include/jtag_types_pkg.vh" from "include/flex_fifo_mem_if.vh"(5)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/flex_fifo_mem_if.vh"(5)
+  Close include file "include/flex_fifo_mem_if.vh"; continuing at "src/flex_fifo_mem.sv"(3)
+  Open include file  "include/jtag_types_pkg.vh" from "src/flex_fifo_mem.sv"(4)
+  Close include file "include/jtag_types_pkg.vh"; continuing at "src/flex_fifo_mem.sv"(4)
+Close file "src/flex_fifo_mem.sv"
+Open SystemVerilog file "src/wptr.sv"
+  Open include file  "include/wptr_if.vh" from "src/wptr.sv"(4)
+    Open include file  "include/jtag_types_pkg.vh" from "include/wptr_if.vh"(4)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/wptr_if.vh"(4)
+  Close include file "include/wptr_if.vh"; continuing at "src/wptr.sv"(4)
+  Open include file  "include/jtag_types_pkg.vh" from "src/wptr.sv"(5)
+  Close include file "include/jtag_types_pkg.vh"; continuing at "src/wptr.sv"(5)
+Close file "src/wptr.sv"
+Open SystemVerilog file "src/rptr.sv"
+  Open include file  "include/rptr_if.vh" from "src/rptr.sv"(4)
+    Open include file  "include/jtag_types_pkg.vh" from "include/rptr_if.vh"(4)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/rptr_if.vh"(4)
+  Close include file "include/rptr_if.vh"; continuing at "src/rptr.sv"(4)
+  Open include file  "include/jtag_types_pkg.vh" from "src/rptr.sv"(5)
+  Close include file "include/jtag_types_pkg.vh"; continuing at "src/rptr.sv"(5)
+Close file "src/rptr.sv"
+Open SystemVerilog file "src/sync_low.sv"
+Close file "src/sync_low.sv"
+Open SystemVerilog file "src/flex_bin2gray.sv"
+Close file "src/flex_bin2gray.sv"
+Open SystemVerilog file "tb/afifo_tb.sv"
+  Open include file  "include/afifo_if.vh" from "tb/afifo_tb.sv"(2)
+    Open include file  "include/jtag_types_pkg.vh" from "include/afifo_if.vh"(4)
+    Close include file "include/jtag_types_pkg.vh"; continuing at "include/afifo_if.vh"(4)
+  Close include file "include/afifo_if.vh"; continuing at "tb/afifo_tb.sv"(2)
+  Open include file  "include/jtag_types_pkg.vh" from "tb/afifo_tb.sv"(3)
+  Close include file "include/jtag_types_pkg.vh"; continuing at "tb/afifo_tb.sv"(3)
+Close file "tb/afifo_tb.sv"

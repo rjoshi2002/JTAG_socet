@@ -22,7 +22,7 @@ import jtag_types_pkg::*;
 
     modport TB
     (
-        input empty, rptr, raddr. 
+        input empty, rptr, raddr, 
         output rinc, rclk, r_nrst, sync_wptr
     );
 endinterface
