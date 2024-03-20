@@ -12,8 +12,8 @@ module ahb_fifo_read #(
 );
     import jtag_types_pkg::*;
     logic timer_clear;
-    logic [$clog2(DATA_WIDTH)-1:0] rollover_val;
-    logic [$clog2(DATA_WIDTH)-1:0] count_out;
+    logic [$clog2(DATA_WIDTH+2)-1:0] rollover_val;
+    logic [$clog2(DATA_WIDTH+2)-1:0] count_out;
     logic rollover_flag;
     logic shift;
     logic update;
@@ -80,13 +80,13 @@ module ahb_fifo_read #(
         if(sr_update) begin
             update = 1'b1;
         end
-        else if((count_out == 'd9) && (arif.dr_shift) && (arif.ahb_fifo_read_select) && (state == READ) && !empty) begin
+        else if((count_out == DATA_WIDTH+1) && (arif.dr_shift) && (arif.ahb_fifo_read_select) && (state == READ) && !arif.empty) begin
             update = 1'b1;
         end
         else
             update = 1'b0;
 
-        if((count_out == 'd8) && (arif.dr_shift) && (arif.ahb_fifo_read_select) && (state == READ)) begin
+        if((count_out == DATA_WIDTH) && (arif.dr_shift) && (arif.ahb_fifo_read_select) && (state == READ)) begin
             arif.rinc = 1'b1;
         end
         else begin
