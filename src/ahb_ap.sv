@@ -27,11 +27,11 @@ module ahb_ap (
     logic [5:0] count, next_count;  
 
     // decode instruction 
-    assign real_data = apif.rdata_fifo1[41:10]; 
-    assign reg_select = apif.rdata_fifo1[9]; 
-    assign size_ahb = apif.rdata_fifo1[8:7]; 
-    assign addr_inc = apif.rdata_fifo1[6:2];
-    assign r_or_w = apif.rdata_fifo1[1]; // read 0, write 1 
+    assign real_data = apif.rdata_fifo1[40:9]; 
+    assign reg_select = apif.rdata_fifo1[8]; 
+    assign size_ahb = apif.rdata_fifo1[7:6]; 
+    assign addr_inc = apif.rdata_fifo1[5:1];
+    assign r_or_w = apif.rdata_fifo1[0]; // read 0, write 1 
     
 
     always_ff @( posedge AFT_CLK, negedge TRST ) begin 
