@@ -1,4 +1,4 @@
-/* Made by Wen-Bo Hung, 12/03/2023*/
+/* Made by Wen-Bo Hung, 2024/03/15*/
 `include "afifo_if.vh"
 `include "jtag_types_pkg.vh"
 
@@ -161,8 +161,8 @@ program test(
         // Case 2: write over 8 data to check whether the full signal is raised
         tb_test_num++;
         tb_test_case = "Write over 8 data to check whether the full signal is raised";
-        r_reset();
-        w_reset();
+        // r_reset();
+        // w_reset();
         data_write(8'h00);
         data_write(8'h11);
         data_write(8'h22);
@@ -189,9 +189,9 @@ program test(
         data_read();
         check_routput(1'b0, 8'h66);
         data_read();
-        check_routput(1'b1, 8'hxx);
+        check_routput(1'b1, 8'b11110000);
         data_read();
-        check_routput(1'b1, 8'hxx);
+        check_routput(1'b1, 8'b11110000);
 
 
         

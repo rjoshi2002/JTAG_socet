@@ -12,7 +12,7 @@ logic [ADDR_WIDTH-1:0] nxt_raddr;
 /* Module instantiations */
 flex_bin2gray #(.bin2gray(1), .width(ADDR_WIDTH)) BIN2GRAY (rpif.raddr, rpif.rptr); // BIN2GRAY
 
-always_ff @(posedge rpif.rclk) begin : RPTR_FF
+always_ff @(posedge rpif.rclk, negedge rpif.r_nrst) begin : RPTR_FF
     if(!rpif.r_nrst) begin
         rpif.raddr <= '0;
     end

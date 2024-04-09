@@ -14,7 +14,7 @@ logic [ADDR_WIDTH-1:0] tran_raddr;
 flex_bin2gray #(.bin2gray(1), .width(ADDR_WIDTH)) BIN2GRAY1 (wpif.waddr, wpif.wptr); // BIN2GRAY
 flex_bin2gray #(.bin2gray(0), .width(ADDR_WIDTH)) BIN2GRAY2 (wpif.sync_rptr, tran_raddr); // GRAY2BIN
 
-always_ff @(posedge wpif.wclk) begin : WPTR_FF
+always_ff @(posedge wpif.wclk, negedge wpif.w_nrst) begin : WPTR_FF
     if(!wpif.w_nrst) begin
         wpif.waddr <= '0;
     end
