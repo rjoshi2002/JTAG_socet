@@ -2,6 +2,7 @@
 `include "ahb_fifo_read_if.vh"
 `include "afifo_if.vh"
 `include "jtag_types_pkg.vh"
+`include "output_logic_if.vh"
 
 `timescale 1 ns/1 ns
 
@@ -13,15 +14,19 @@ module ahb_fifo_read_tb;
     //interface
     afifo_if #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) affif();
     ahb_fifo_read_if #(.DATA_WIDTH(DATA_WIDTH)) arif();
+    output_logic_if olif();
 
 
     assign arif.rdata = affif.rdata;
     assign arif.empty = affif.empty;
     assign affif.rinc = arif.rinc;
+    assign olif.ahb = arif.TDO;
+
+    logic TRST;
 
     //test program
     test #(.PERIOD1 (PERIOD1), .PERIOD2(PERIOD2), .DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) PROG (
-        .affif(affif), .arif(arif)
+        .affif(affif), .arif(arif), .olif(olif), .TRST(TRST)
     );
     // DUT
     `ifndef MAPPED
@@ -44,7 +49,7 @@ module ahb_fifo_read_tb;
     `ifndef MAPPED
         ahb_fifo_read #(.DATA_WIDTH(8)) DUT(affif.rclk, arif);
     `else
-        afifo #(.DATA_WIDTH(8)) DUT(
+        ahb_fifo_read #(.DATA_WIDTH(8)) DUT(
             .\arif.tlr_reset (arif.tlr_reset),
             .\arif.dr_shift (arif.dr_shift),
             .\arif.ahb_fifo_read_select (arif.ahb_fifo_read_select),
@@ -55,11 +60,34 @@ module ahb_fifo_read_tb;
             .\TCK(affif.rclk)
         );
     `endif
+
+    `ifndef MAPPED
+        output_logic OUTPUT_LOGIC(affif.rclk, TRST, olif);
+    `else
+        output_logic OUTPUT_LOGIC(
+            .\TCK(affif.rclk),
+            .\TRST(TRST),
+            .\olif.dr_shift(olif.dr_shift),
+            .\olif.bypass_out(olif.bypass_out),
+            .\olif.bsr_out(olif.bsr_out),
+            .\olif.ir_shift(olif.ir_shift),
+            .\olif.tmp_status(olif.tmp_status),
+            .\olif.instr_out(olif.instr_out),
+            .\olif.instruction(olif.instruction),
+            .\olif.ahb(olif.ahb),
+            .\olif.idcode(olif.idcode),
+            .\olif.ahb_error(olif.ahb_error),
+            .\olif.tlr_reset(olif.tlr_reset),
+            .\olif.TDO(olif.TDO),
+        );
+    `endif
 endmodule
 
 program test(
     afifo_if affif,
-    ahb_fifo_read_if arif
+    ahb_fifo_read_if arif,
+    output_logic_if olif,
+    output logic TRST
 );
     import jtag_types_pkg::*;
     parameter PERIOD1 = 10.1;
@@ -72,10 +100,12 @@ program test(
     task r_reset;
     begin
         affif.r_nrst = 0;
+        TRST = 0;
         @(posedge affif.rclk);
         @(posedge affif.rclk);
         @(negedge affif.rclk);
         affif.r_nrst = 1;
+        TRST = 1;
     end
     endtask
 
@@ -104,38 +134,40 @@ program test(
     begin
         @(posedge affif.rclk);
         arif.dr_shift = 1'b1;
+        olif.dr_shift = 1'b1;
         arif.ahb_fifo_read_select = 1'b1;
         for(int i = 0; i < DATA_WIDTH + 2; i++) begin
             if(i == 0) begin // Start bit(1)
                 @(posedge affif.rclk);
-                if(arif.TDO == 1'b1) begin
-                    $display("Start bit is as expected: %0b", arif.TDO);
+                if(olif.TDO == 1'b1) begin
+                    $display("Start bit is as expected: %0b", olif.TDO);
                 end
                 else begin
-                    $display("Start bit is not as expected: %0b", arif.TDO);
+                    $display("Start bit is not as expected: %0b", olif.TDO);
                 end
             end
             else if(i == 9) begin // Stop bit(0)
                 @(posedge affif.rclk);
-                if(arif.TDO == 1'b0) begin
-                    $display("Stop bit is as expected: %0b", arif.TDO);
+                if(olif.TDO == 1'b0) begin
+                    $display("Stop bit is as expected: %0b", olif.TDO);
                 end
                 else begin
-                    $display("Stop bit is not as expected: %0b", arif.TDO);
+                    $display("Stop bit is not as expected: %0b", olif.TDO);
                 end
+                arif.dr_shift = 1'b0;
+                olif.dr_shift = 1'b0;
+                arif.ahb_fifo_read_select = 1'b0;
             end
             else begin
                 @(posedge affif.rclk);
-                if(arif.TDO == exp_rdata[i-1]) begin
-                    $display("%d bit is as expected: %0b", i-1, arif.TDO);
+                if(olif.TDO == exp_rdata[i-1]) begin
+                    $display("%d bit is as expected: %0b", i-1, olif.TDO);
                 end
                 else begin
-                    $display("%d bit is not as expected: %0b", i-1, arif.TDO);
+                    $display("%d bit is not as expected: %0b", i-1, olif.TDO);
                 end
             end
         end
-        arif.dr_shift = 1'b0;
-        arif.ahb_fifo_read_select = 1'b0;
     end
     endtask
 
@@ -152,14 +184,14 @@ program test(
 
     initial begin
     affif.wclk = 0;
-    forever #(PERIOD1/2) begin
+    forever #(PERIOD2/2) begin
         affif.wclk = ~affif.wclk;
         end
     end
 
     initial begin
     affif.rclk = 0;
-    forever #(PERIOD2/2) begin
+    forever #(PERIOD1/2) begin
         affif.rclk = ~affif.rclk;
         end
     end
@@ -169,18 +201,33 @@ program test(
         tb_test_case = "Reset";
         affif.w_nrst = 1'b1;
         affif.r_nrst = 1'b1;
+        TRST = 1'b1;
         affif.winc = 1'b0;
         arif.tlr_reset = 1'b0;
         arif.dr_shift = 1'b0;
         arif.ahb_fifo_read_select = 1'b0;
+        olif.instruction = AHB;
+        olif.dr_shift = 1'b0;
+        olif.bypass_out = 1'b0;
+        olif.bsr_out = 1'b0;
+        olif.ir_shift = 1'b0;
+        olif.tmp_status = 1'b0;
+        olif.instr_out = 1'b0;
+        olif.idcode = 1'b0;
+        olif.ahb_error = 1'b0;
+        olif.tlr_reset = 1'b0;
+        
         r_reset();
         w_reset();
         ahb_read_reset();
+        check_data(8'h0);
 
         // Case 1: Write a data onto buffer and read from it
         tb_test_num++;
         tb_test_case = "Write a data onto buffer and read from it";
         data_write(8'haa);
+        @(negedge affif.rclk);
+        @(negedge affif.rclk);
         @(negedge affif.rclk);
         @(negedge affif.rclk);
         @(negedge affif.rclk);
@@ -193,9 +240,11 @@ program test(
         @(negedge affif.rclk);
         @(negedge affif.rclk);
         @(negedge affif.rclk);
+        @(negedge affif.rclk);
+        @(negedge affif.rclk);
         check_data(8'haa);
         check_data(8'hbb);
-
+        check_data(8'h0);
 
 
         
