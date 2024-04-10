@@ -9,15 +9,20 @@ interface ahb_ap_if;
     // import types
     import jtag_types_pkg::*;
 
-    logic en, full, busy; 
-    logic [31:0] rdata; 
-    logic [41:0] ahb_reg_data; 
-    logic ack, wen_buf, ren, wen_ahb, byte_en; 
-    logic [31:0] wdata_ahb, wdata_buf, addr; 
+    
+    logic rempty, rinc, wfull, winc; 
+    logic [40:0] rdata_fifo1; 
+    logic [31:0] wdata_fifo2; 
+    
+    // // generic bus 
+    // logic busy; 
+    // logic ren, wen; 
+    // logic [3:0] byte_en; 
 
     modport ap (
-        input en, data, full, busy, rdata, 
-        output ack, wdata_buf, wen_buf, addr, ren, wen_ahb, wdata_ahb, byte_en
+        input rempty, wfull, rdata_fifo1, rdata_fifo1,
+        output wdata_fifo2, rinc, winc
+
     );
 
 endinterface
