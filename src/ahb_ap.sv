@@ -79,7 +79,7 @@ module ahb_ap (
                 end
             end
             ADDR: next_state = r_or_w ? WAIT : READ; 
-            READ: next_state = (gbif.busy & (count == addr_inc)) ? IDLE : READ; 
+            READ: next_state = (gbif.busy & (addr_inc_reg == addr_inc)) ? IDLE : READ; 
             WAIT: next_state = apif.rempty ? WAIT: DATA;
             DATA: next_state = (r_or_w) ? WRITE : IDLE; 
             WRITE: next_state = gbif.busy ? IDLE : WRITE; 
@@ -98,6 +98,7 @@ module ahb_ap (
         next_addr_reg = addr_reg; 
         next_data_reg = data_reg;  
         next_wdata_fifo2_reg = wdata_fifo2_reg; 
+        next_addr_inc_reg = addr_inc_reg; 
 
         casez (state)
             READ: begin
@@ -105,6 +106,7 @@ module ahb_ap (
                 next_wdata_fifo2_reg = gbif.rdata; 
                 apif.winc = 1'b1; 
                 next_addr_reg = real_data;
+                next_addr_inc_reg += 1; 
             end
             DATA: begin
                 if(addr_inc) begin
@@ -140,12 +142,7 @@ module ahb_ap (
         if(count == 40) begin
             next_count = 0; 
         end else begin
-            if(state == READ) begin
-                next_count = count - 1; 
-            end
-            else begin
-                next_count = count + 1; 
-            end 
+            next_count = count + 1; 
         end
 
     end
