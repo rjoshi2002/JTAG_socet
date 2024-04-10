@@ -52,6 +52,41 @@ begin
 end
 endtask
 
+task check_ahb_output; 
+    input logic [31:0] wdata; 
+    input logic wen;
+    input logic [3:0] byte_en; 
+begin
+    if (gbif.wdata != wdata) begin
+        $display("Test failed: Address does not match.");
+        $stop;
+    end
+    if (gbif.wen != wen) begin
+        $display("Test failed: Write Enable not asserted.");
+        $stop;
+    end
+    if(gbif.byte_en != byte_en) begin
+        $display("Test failed: byte enable does not match.");
+        $stop; 
+    end 
+end
+endtask
+
+task check_fifo_output; 
+    input logic [31:0] wdata;
+    // input logic winc; 
+begin
+    if(apif.wdata_fifo2 != wdata) begin
+        $display("Test failed: write to fifo is wrong");
+        $stop;
+    end
+    // if(apif.winc != winc) begin
+    //     $display("Test failed: winc is wrong");
+    //     $stop;
+    // end
+end
+endtask
+
 initial begin
     tb_test_num = 0; 
     tb_test_case = "Reset"; 
@@ -59,6 +94,8 @@ initial begin
     apif.rdata_fifo1 = 41'b0;
     apif.rempty = 1;
     gbif.busy = 0;
+    gbif.rdata = '0; 
+    apif.wfull = 0; 
 
     reset_dut; 
 
@@ -70,12 +107,12 @@ initial begin
     apif.rdata_fifo1 = {32'hABCD1234, 1'b1, 2'd0, 5'd0, 1'b1}; 
     apif.rempty = 0; 
     @(posedge AFT_CLK); 
-    // apif.rempty = 1; 
+    apif.rempty = 1; 
 
     @(posedge AFT_CLK);
     #(PERIOD*32);
 
-    if (gbif.wdata != 32'hABCD1234) begin
+    if (gbif.addr != 32'hABCD1234) begin
         $display("Test failed: Address does not match.");
         $stop;
     end
@@ -92,12 +129,14 @@ initial begin
     tb_test_num++; 
     tb_test_case = "read data from AHB (byte) and write to fifo2";
 
-    apif.rdata_fifo1 = {32'h12345678, 1'b1, 8'b0, 1'b1}; 
+    apif.rdata_fifo1 = {32'h0, 1'b1, 8'b0, 1'b0}; 
+    gbif.rdata = 32'h12345678; 
     apif.rempty = 0; 
     @(posedge AFT_CLK); 
-    apif.rempty = 1; 
-
-    #(PERIOD);
+    // apif.rempty = 1; 
+    apif.wfull = 0; 
+    #(PERIOD * 32); 
+    check_fifo_output(32'h12345678);
 
     // Finish the simulation
     $display("All tests passed.");
