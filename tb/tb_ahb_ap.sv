@@ -94,6 +94,8 @@ initial begin
     apif.rdata_fifo1 = 41'b0;
     apif.rempty = 1;
     gbif.busy = 0;
+    gbif.rdata = '0; 
+    apif.wfull = 0; 
 
     reset_dut; 
 
@@ -108,6 +110,8 @@ initial begin
     // apif.rempty = 1; 
     #(PERIOD * 32); 
     gbif.busy = 1; 
+    apif.wfull = 0; 
+    
     
     check_ahb_output(32'hABCD1234, 1'b1, 4'd0); 
     apif.rempty = 0; 
