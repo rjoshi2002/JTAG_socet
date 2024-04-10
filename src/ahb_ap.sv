@@ -22,7 +22,7 @@ module ahb_ap (
     } state_t;
 
     state_t state, next_state; 
-    logic [40:0] ahb_data;
+    // logic [40:0] ahb_data;
     logic [31:0] real_data;  
     logic [1:0] size_ahb; 
     logic [4:0] addr_inc, addr_inc_reg, next_addr_inc_reg;
@@ -140,7 +140,12 @@ module ahb_ap (
         if(count == 40) begin
             next_count = 0; 
         end else begin
-            next_count = count + 1; 
+            if(state == READ) begin
+                next_count = count - 1; 
+            end
+            else begin
+                next_count = count + 1; 
+            end 
         end
 
     end
