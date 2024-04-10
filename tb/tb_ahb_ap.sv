@@ -63,19 +63,19 @@ initial begin
     reset_dut; 
 
     tb_test_num++; 
-    tb_test_case = "Write addr to AHB (byte)";
+    tb_test_case = "Write wdata to AHB (byte)";
 
     reset_dut; 
 
-    apif.rdata_fifo1 = {32'hABCD1234, 9'b0, 1'b1}; 
+    apif.rdata_fifo1 = {32'hABCD1234, 1'b1, 2'd0, 5'd0, 1'b1}; 
     apif.rempty = 0; 
     @(posedge AFT_CLK); 
-    apif.rempty = 1; 
+    // apif.rempty = 1; 
 
     @(posedge AFT_CLK);
     #(PERIOD*32);
 
-    if (gbif.addr != 32'hABCD1234) begin
+    if (gbif.wdata != 32'hABCD1234) begin
         $display("Test failed: Address does not match.");
         $stop;
     end
@@ -90,7 +90,7 @@ initial begin
 
 
     tb_test_num++; 
-    tb_test_case = "write data to AHB (byte)";
+    tb_test_case = "read data from AHB (byte) and write to fifo2";
 
     apif.rdata_fifo1 = {32'h12345678, 1'b1, 8'b0, 1'b1}; 
     apif.rempty = 0; 
