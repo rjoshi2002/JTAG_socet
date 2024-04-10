@@ -7,7 +7,7 @@
 module afifo #(parameter DATA_WIDTH = 8, parameter ADDR_WIDTH = 32)(
     afifo_if.AFIFO affif
 );
-
+    import jtag_types_pkg::*;
     /* Interface instantiations */
     flex_fifo_mem_if #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) ffif();
     wptr_if #(.ADDR_WIDTH(ADDR_WIDTH)) wpif();

@@ -59,7 +59,8 @@ package jtag_types_pkg;
         AHB                     = 5'b01110,
         // Extra BYPASS
         BYPASS_2				= 5'b01111,
-        AHB_ERROR       = 5'b10000
+        AHB_ERROR       = 5'b10000,
+		AHB_READ		= 5'b10001
 	} instruction_t;
 
 

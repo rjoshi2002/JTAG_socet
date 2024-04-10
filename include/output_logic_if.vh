@@ -16,6 +16,7 @@ import jtag_types_pkg::*;
     logic TDO;
     logic tmp_status;
     logic ahb;
+    logic ahb_read;
     logic idcode;
     logic ahb_error;
     logic tlr_reset;
@@ -30,6 +31,7 @@ import jtag_types_pkg::*;
         instr_out,
         instruction,
         ahb,
+        ahb_read.
         idcode,
         ahb_error,
         tlr_reset,

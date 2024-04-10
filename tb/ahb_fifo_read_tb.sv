@@ -20,7 +20,7 @@ module ahb_fifo_read_tb;
     assign arif.rdata = affif.rdata;
     assign arif.empty = affif.empty;
     assign affif.rinc = arif.rinc;
-    assign olif.ahb = arif.TDO;
+    assign olif.ahb_read = arif.TDO;
 
     logic TRST;
 
@@ -206,7 +206,7 @@ program test(
         arif.tlr_reset = 1'b0;
         arif.dr_shift = 1'b0;
         arif.ahb_fifo_read_select = 1'b0;
-        olif.instruction = AHB;
+        olif.instruction = AHB_READ;
         olif.dr_shift = 1'b0;
         olif.bypass_out = 1'b0;
         olif.bsr_out = 1'b0;

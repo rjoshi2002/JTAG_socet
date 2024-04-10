@@ -7,7 +7,7 @@
 
 interface ahb_ap_if;
     // import types
-    import jtag_types_pkg::*;
+    // import jtag_types_pkg::*;
 
     
     logic rempty, rinc, wfull, winc; 
@@ -20,7 +20,7 @@ interface ahb_ap_if;
     // logic [3:0] byte_en; 
 
     modport ap (
-        input rempty, wfull, rdata_fifo1, rdata_fifo1,
+        input rempty, wfull, rdata_fifo1,
         output wdata_fifo2, rinc, winc
 
     );

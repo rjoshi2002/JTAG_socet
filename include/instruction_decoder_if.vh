@@ -15,6 +15,7 @@ import jtag_types_pkg::*;
 	logic bypass_select;
 	logic tmp_select;
 	logic ahb_select;
+	logic ahb_fifo_read_select;
 	// Signals to TMP controller
 	logic clamp_hold_decode;
 	logic clamp_release_decode;
@@ -22,7 +23,7 @@ import jtag_types_pkg::*;
 	modport ID
 	(
 		input parallel_out,
-		output bsr_select, bsr_mode, id_select, bypass_select, ahb_select, tmp_select, clamp_hold_decode, clamp_release_decode, bypass_decode
+		output bsr_select, bsr_mode, id_select, bypass_select, ahb_select, ahb_fifo_read_select, tmp_select, clamp_hold_decode, clamp_release_decode, bypass_decode
 	);
 endinterface
 
