@@ -70,7 +70,7 @@ module ahb_ap (
         next_state = state; 
         casez (state)
             IDLE: begin
-                if(!apif.rempty & reg_select) begin
+                if(!apif.rempty & !reg_select) begin
                     next_state = ADDR; 
                 end else if (!apif.rempty & reg_select & !addr_inc) begin
                     next_state = DATA; 
