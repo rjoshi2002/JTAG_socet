@@ -26,11 +26,11 @@
 `define GENERIC_BUS_IF_VH
 
 interface generic_bus_if ();
-  import rv32i_types_pkg::*;
+  // import rv32i_types_pkg::*;
 
-  logic [RAM_ADDR_SIZE-1:0] addr;
-  word_t wdata;
-  word_t rdata;
+  logic [31:0] addr;
+  logic [31:0] wdata;
+  logic [31:0] rdata;
   logic ren,wen;
   logic busy;
   logic [3:0] byte_en;
