@@ -2,7 +2,7 @@
 `include "ahb_ap_if.vh"
 // `include "generic_bus_if.vh"
 `include "bus_protocol_if.sv"
-`include "jtag_types_pkg.vh"
+// `include "jtag_types_pkg.vh"
 
 module tb_ahb_ap;
 
@@ -15,7 +15,7 @@ module tb_ahb_ap;
 
     ahb_ap_if apif();
     // generic_bus_if gbif();
-    bus_protocol_if.peripheral_vital busif(); 
+    bus_protocol_if busif(); 
     
 
     test #(.PERIOD(CLK_PERIOD)) PROG (
@@ -28,7 +28,7 @@ endmodule
 program test (
     input logic AFT_CLK, output logic nRST, ahb_ap_if apif, bus_protocol_if busif
 ); 
-    import jtag_types_pkg::*; 
+    // import jtag_types_pkg::*; 
     parameter PERIOD = 10; 
     int tb_test_num; 
     string tb_test_case; 
