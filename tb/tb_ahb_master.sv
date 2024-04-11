@@ -79,6 +79,7 @@ begin
     if(ahbif.HADDR != addr) begin
         $display("Test failed: write address incorrect.");
         $stop; 
+    end
 end
 endtask
 
