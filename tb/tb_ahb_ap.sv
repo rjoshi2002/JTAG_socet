@@ -1,6 +1,7 @@
 `timescale 1ns / 1ns
 `include "ahb_ap_if.vh"
-`include "generic_bus_if.vh"
+// `include "generic_bus_if.vh"
+`include "bus_protocol_if.sv"
 `include "jtag_types_pkg.vh"
 
 module tb_ahb_ap;
@@ -13,17 +14,19 @@ module tb_ahb_ap;
     always #(CLK_PERIOD/2) AFT_CLK++; 
 
     ahb_ap_if apif();
-    generic_bus_if gbif();
+    // generic_bus_if gbif();
+    bus_protocol_if.peripheral_vital busif(); 
+    
 
     test #(.PERIOD(CLK_PERIOD)) PROG (
-        .AFT_CLK(AFT_CLK), .nRST(nRST), .apif(apif), .gbif(gbif)
+        .AFT_CLK(AFT_CLK), .nRST(nRST), .apif(apif), .busif(busif)//.gbif(gbif)
     ); 
         
-    ahb_ap DUT(AFT_CLK, nRST, apif, gbif);
+    ahb_ap DUT(AFT_CLK, nRST, apif, busif);
 endmodule
 
 program test (
-    input logic AFT_CLK, output logic nRST, ahb_ap_if apif, generic_bus_if gbif 
+    input logic AFT_CLK, output logic nRST, ahb_ap_if apif, bus_protocol_if busif
 ); 
     import jtag_types_pkg::*; 
     parameter PERIOD = 10; 
@@ -57,15 +60,15 @@ task check_ahb_output;
     input logic wen;
     input logic [3:0] byte_en; 
 begin
-    if (gbif.wdata != wdata) begin
+    if (busif.wdata != wdata) begin
         $display("Test failed: Address does not match.");
         $stop;
     end
-    if (gbif.wen != wen) begin
+    if (busif.wen != wen) begin
         $display("Test failed: Write Enable not asserted.");
         $stop;
     end
-    if(gbif.byte_en != byte_en) begin
+    if(busif.strobe != byte_en) begin
         $display("Test failed: byte enable does not match.");
         $stop; 
     end 
@@ -93,8 +96,8 @@ initial begin
     nRST = 1'b1; 
     apif.rdata_fifo1 = 41'b0;
     apif.rempty = 1;
-    gbif.busy = 0;
-    gbif.rdata = '0; 
+    busif.request_stall = 0;
+    busif.rdata = '0; 
     apif.wfull = 0; 
 
     reset_dut; 
@@ -107,30 +110,20 @@ initial begin
     apif.rdata_fifo1 = {32'hABCD1234, 1'b1, 2'd0, 5'd0, 1'b1}; 
     apif.rempty = 0; 
     @(posedge AFT_CLK); 
-    apif.rempty = 1; 
-
-    @(posedge AFT_CLK);
-    #(PERIOD*32);
-
-    if (gbif.addr != 32'hABCD1234) begin
-        $display("Test failed: Address does not match.");
-        $stop;
-    end
-    if (gbif.wen == 1'b0) begin
-        $display("Test failed: Write Enable not asserted.");
-        $stop;
-    end
-    if(gbif.byte_en != 4'd0) begin
-        $display("Test failed: byte enable does not match.");
-        $stop; 
-    end 
-
-
+    // apif.rempty = 1; 
+    #(PERIOD * 32); 
+    busif.request_stall = 1; 
+    apif.wfull = 0; 
+    
+    
+    check_ahb_output(32'hABCD1234, 1'b1, 4'd0); 
+    apif.rempty = 0; 
+    reset_dut; 
     tb_test_num++; 
     tb_test_case = "read data from AHB (byte) and write to fifo2";
 
     apif.rdata_fifo1 = {32'h0, 1'b1, 8'b0, 1'b0}; 
-    gbif.rdata = 32'h12345678; 
+    busif.rdata = 32'h12345678; 
     apif.rempty = 0; 
     @(posedge AFT_CLK); 
     // apif.rempty = 1; 
