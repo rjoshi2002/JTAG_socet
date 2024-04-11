@@ -2,9 +2,9 @@
 `include "ahb_ap_if.vh"
 // `include "generic_bus_if.vh"
 `include "bus_protocol_if.sv"
-// `include "jtag_types_pkg.vh"
+`include "jtag_types_pkg.vh"
 
-module tb_ahb_ap;
+module tb_ahb_master;
 
     localparam CLK_PERIOD = 10;
 
@@ -15,20 +15,23 @@ module tb_ahb_ap;
 
     ahb_ap_if apif();
     // generic_bus_if gbif();
-    bus_protocol_if busif(); 
+    bus_protocol_if.peripheral_vital busif(); 
+    ahb_if.manager ahbif; 
     
 
     test #(.PERIOD(CLK_PERIOD)) PROG (
-        .AFT_CLK(AFT_CLK), .nRST(nRST), .apif(apif), .busif(busif)//.gbif(gbif)
+        .AFT_CLK(AFT_CLK), .nRST(nRST), .apif(apif), .busif(busif), //.gbif(gbif)
     ); 
         
-    ahb_ap DUT(AFT_CLK, nRST, apif, busif);
+    ahb_ap DUT( .AFT_CLK(AFT_CLK), .nRST(nRST), apif, busif);
+    ahb_manager ahb_m (busif, ahbif(.HCLK(AFT_CLK), .HRESETn(nRST))); 
+
 endmodule
 
 program test (
-    input logic AFT_CLK, output logic nRST, ahb_ap_if apif, bus_protocol_if busif
+    input logic AFT_CLK, output logic nRST, ahb_ap_if apif, bus_protocol_if busif, ahb_if ahbif
 ); 
-    // import jtag_types_pkg::*; 
+    import jtag_types_pkg::*; 
     parameter PERIOD = 10; 
     int tb_test_num; 
     string tb_test_case; 
@@ -59,19 +62,24 @@ task check_ahb_output;
     input logic [31:0] wdata; 
     input logic wen;
     input logic [3:0] byte_en; 
+    input logic [31:0] addr; 
 begin
-    if (busif.wdata != wdata) begin
+    if (ahbif.HWDATA != wdata) begin
         $display("Test failed: Address does not match.");
         $stop;
     end
-    if (busif.wen != wen) begin
+    if (ahbif.HWRITE != wen) begin
         $display("Test failed: Write Enable not asserted.");
         $stop;
     end
-    if(busif.strobe != byte_en) begin
+    if(ahbif.HWSTRB != byte_en) begin
         $display("Test failed: byte enable does not match.");
         $stop; 
     end 
+    if(ahbif.HADDR != addr) begin
+        $display("Test failed: write address incorrect.");
+        $stop; 
+    end
 end
 endtask
 
@@ -83,10 +91,6 @@ begin
         $display("Test failed: write to fifo is wrong");
         $stop;
     end
-    // if(apif.winc != winc) begin
-    //     $display("Test failed: winc is wrong");
-    //     $stop;
-    // end
 end
 endtask
 
@@ -96,9 +100,10 @@ initial begin
     nRST = 1'b1; 
     apif.rdata_fifo1 = 41'b0;
     apif.rempty = 1;
-    busif.request_stall = 0;
-    busif.rdata = '0; 
     apif.wfull = 0; 
+    ahbif.HRESP = 0; 
+    ahbif.HREADY = 0; 
+    ahbif.HRDATA = '0; 
 
     reset_dut; 
 
@@ -112,11 +117,11 @@ initial begin
     @(posedge AFT_CLK); 
     // apif.rempty = 1; 
     #(PERIOD * 32); 
-    busif.request_stall = 1; 
+    // busif.request_stall = 1; 
     apif.wfull = 0; 
     
     
-    check_ahb_output(32'hABCD1234, 1'b1, 4'd0); 
+    check_ahb_output(32'hABCD1234, 1'b1, 4'd0, '0); 
     apif.rempty = 0; 
     reset_dut; 
     tb_test_num++; 

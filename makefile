@@ -11,12 +11,14 @@ TESTNAME= extest_test
 # uvm source file
 UVM_SRC_FILES = src/adder_Nbit.sv src/bsr.sv src/instruction_decoder.sv src/instruction_reg.sv src/jtag.sv src/output_logic.sv src/tap_ctrl.sv src/idr.sv src/bpr.sv src/flex_stp_sr.sv
 # normal file
+SRC_FILES = src/ahb_reg.sv
 #SRC_FILES = src/afifo.sv src/flex_fifo_mem.sv src/wptr.sv src/rptr.sv src/sync_low.sv src/flex_bin2gray.sv src/ahb_fifo_read.sv src/flex_counter.sv src/flex_pts_sr.sv src/output_logic.sv
-SRC_FILES = src/afifo.sv src/flex_fifo_mem.sv src/wptr.sv src/rptr.sv src/sync_low.sv
+#SRC_FILES = src/afifo.sv src/flex_fifo_mem.sv src/wptr.sv src/rptr.sv src/sync_low.sv
 # Select the Cell Library to use with simulations
 GATE_LIB		:= $(AMI_05_LIB)
 #TESTBENCH        = tb/ahb_fifo_read_tb.sv
-TESTBENCH		  = tb/afifo_tb.sv
+#TESTBENCH		  = tb/afifo_tb.sv
+TESTBENCH		 = tb/ahb_reg_tb.sv
 # Please add in extra files needed for specific simulations here
 OSU05_STD_CELL := osu05/osu05_stdcells.v
 build:
@@ -27,7 +29,7 @@ build:
 	-printinfilenames=normal_file_search.log
 
 run: build
-	vsim -c afifo_tb \
+	vsim -c ahb_reg_tb \
 	-voptargs=+acc\
 	-coverage \
 	+no_glitch_msg -suppress 12110 \
@@ -35,7 +37,7 @@ run: build
 	-do "coverage save -onexit coverage.ucdb" -do "run -all" &
 
 run_gui: build
-	vsim -i afifo_tb \
+	vsim -i ahb_reg_tb \
 	-voptargs=+acc\
 	-coverage \
 	+no_glitch_msg -suppress 12110 \

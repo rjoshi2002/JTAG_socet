@@ -25,8 +25,8 @@ module jtag(
     parameter NUM_IN = 9;
     parameter NUM_OUT = 5;
     // AHB DATA
-    parameter DATA_WIDTH = 8;
-    parameter ADDR_WIDTH = 3;
+    parameter DATA_WIDTH = 32;
+    parameter ADDR_WIDTH = 5;
     /* Interface instantiations */
     adder_if adif(jtif.clk);
     bsr_if bsrif();
@@ -34,6 +34,7 @@ module jtag(
     bpr_if bprif();
     ahb_fifo_read_if #(.DATA_WIDTH(DATA_WIDTH)) arif();
     afifo_if #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) affif_read();
+    afifo_if #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) affif_send();
     instruction_decoder_if idif();
     instruction_reg_if irif();
     tap_ctrl_if tcif();
@@ -48,6 +49,7 @@ module jtag(
     instruction_reg      INS_REG(jtif.TCK, jtif.TRST, irif);
     ahb_fifo_read #(.DATA_WIDTH(DATA_WIDTH)) AHB_READ(affif.rclk, arif);
     afifo #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) FIFO_READ(affif_read);
+    afifo #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) FIFO_SEND(affif_send);
     tap_ctrl             TAP_CTRL(jtif.TCK, jtif.TRST, tcif);
     output_logic         OUTPUT_LOGIC(jtif.TCK, jtif.TRST, olif);
     flex_stp_sr   #(.NUM_BITS(32), .SHIFT_MSB(0))   SHIFT_REGISTER  (jtif.TCK, jtif.TRST, tcif.dr_shift, olif.TDO, jtif.sr_parallel_out);
