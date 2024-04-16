@@ -103,7 +103,13 @@ module ahb_ap (
         next_addr_inc_reg = addr_inc_reg; 
 
         casez (state)
-            ADDR: apif.rinc = 1'b1;
+            ADDR: begin
+                apif.rinc = 1'b1;
+                if(r_or_w) begin
+                    busif.wen = 1'b1; 
+                end
+            end
+
             READ: begin
                 busif.ren = 1'b1;
                 next_wdata_fifo2_reg = busif.rdata; 
