@@ -1,0 +1,176 @@
+-- ******************          SoCET JTAG                   **************************
+-- * File Name          : jtag_adder.bsd                                             *
+-- * Author             : Rohan Joshi (JTAG SoCET)                                   *
+-- * Version            : V0.1                                                       *
+-- * Date               : 28-February-2024                                           *
+-- * Description        : Boundary Scan Description Language (BSDL) file for the     *
+-- *                      SoCET JTAG design on 4 bit adder                           *
+-- ***********************************************************************************
+
+-- ***********************************************************************************
+-- * This BSDL file has been syntaxed checked and validated by:                      *                                                                 
+-- * NOTHING YET                                                                     *
+-- ***********************************************************************************
+ entity jtag_adder is
+ 
+ -- This section identifies the default device package selected.
+   
+   generic (PHYSICAL_PIN_MAP: string:= "SIP32"); 
+   --what is the package pin out for AFTx08
+
+--Declares our design as Single Inline Package with 32 pins 
+   
+-- This section declares all the ports in the design.
+   
+   port ( 
+	  TDI		: in 	bit;
+	  TMS		: in 	bit;
+	  TCK		: in 	bit;
+	  TDO		: out	bit;
+	  PA0		: in	bit;
+	  PA1		: in	bit;
+	  PA2		: in	bit;
+	  PA3		: in	bit;
+      	  PB0		: in	bit;
+	  PB1		: in	bit;
+	  PB2		: in	bit;
+	  PB3		: in	bit;
+      	  carry_in  	: in    bit;
+	  PO0       	: buffer   bit;
+	  PO1       	: buffer   bit;
+	  PO2       	: buffer   bit;
+	  PO3       	: buffer   bit;
+      	  overflow  	: buffer   bit
+	);
+	
+	
+   use STD_1149_1_2001.all;
+   
+   attribute COMPONENT_CONFORMANCE of jtag_adder: entity is "STD_1149_1_2001";
+   
+   attribute PIN_MAP of jtag_adder : entity is PHYSICAL_PIN_MAP;
+   
+-- This section specifies the pin map for each port. This information is extracted from the 
+-- port-to-pin map file that was read in using the "read_pin_map" command.
+   
+     constant SIP32: PIN_MAP_STRING :=
+	  "TDI  	: 18," &
+	  "TMS		: 17," &
+	  "TCK  	: 16," &
+	  "TDO  	: 15," &
+	  "PA0		: 0," &
+	  "PA1  	: 1," &
+	  "PA2  	: 2," &
+	  "PA3		: 3," &
+	  "PB0		: 4," &
+	  "PB1		: 5," &
+	  "PB2		: 6," &
+	  "PB3		: 7," &
+	  "carry_in	: 8," &
+	  "PO0		: 9," &
+	  "PO1		: 10," &
+	  "PO2		: 11," &
+	  "PO3		: 12," &
+	  "overflow	: 13" ;
+	  
+-- This section specifies the TAP ports. For the TAP TCK port, the parameters in the brackets are:
+--        First Field : Maximum  TCK frequency. (4 MHz)
+--        Second Field: Allowable states TCK may be stopped in.
+   
+   attribute TAP_SCAN_CLOCK of TCK  : signal is (1.0e3, BOTH);
+   attribute TAP_SCAN_IN    of TDI  : signal is true;
+   attribute TAP_SCAN_MODE  of TMS  : signal is true;
+   attribute TAP_SCAN_OUT   of TDO  : signal is true;
+   -- attribute TAP_SCAN_RESET of TRST : signal is false;
+   
+-- Specifies the compliance enable patterns for the design. It lists a set of 
+-- design ports and the values that they should be set to, in order to enable 
+-- compliance to IEEE Std 1149.1
+   
+   -- attribute COMPLIANCE_PATTERNS of jtag_adder: entity is 
+   --      "(NRST) (0)";
+   
+-- Specifies the number of bits in the instruction register.
+
+   attribute INSTRUCTION_LENGTH of jtag_adder: entity is 5;
+
+-- Specifies the boundary-scan instructions implemented in the design and their opcodes.
+   
+   attribute INSTRUCTION_OPCODE of jtag_adder: entity is 
+     "BYPASS  (11111)," &
+     "EXTEST  (00011)," &
+     "SAMPLE  (00001)," &
+     "PRELOAD (00010)," &
+     "IDCODE  (00100)";
+   
+-- Specifies the bit pattern that is loaded into the instruction register when the TAP controller 
+-- passes through the Capture-IR state. The standard mandates that the two LSBs must be "01". The 
+-- remaining bits are design specific.
+   
+   attribute INSTRUCTION_CAPTURE of jtag_adder: entity is "00001";
+
+-- Specifies the bit pattern that is loaded into the DEVICE_ID register during the IDCODE 
+-- instruction when the TAP controller passes through the Capture-DR state.
+   
+   attribute IDCODE_REGISTER of jtag_adder : entity is 
+     "0001" &              -- 4-bit version number
+     "0000000000000001" &  -- 16-bit part number -- 430
+     "00000000001" &       -- 11-bit identity of the manufacturer
+     "1";                  -- Required by IEEE Std 1149.1
+ 
+ -- This section specifies the test data register placed between TDI and TDO for each implemented 
+-- instruction.
+   
+   attribute REGISTER_ACCESS of jtag_adder: entity is 
+        "BYPASS    (BYPASS)," &
+        "BOUNDARY  (EXTEST, SAMPLE, PRELOAD)," &
+        "DEVICE_ID (IDCODE)";
+
+-- Specifies the length of the boundary scan register.
+   
+-- attribute BOUNDARY_CELLS of jtag_adder : entity is "BC_1";
+   attribute BOUNDARY_LENGTH of jtag_adder : entity is 14;
+ 
+-- The following list specifies the characteristics of each cell in the boundary scan register from 
+-- TDI to TDO. The following is a description of the label fields:
+--      num     : Is the cell number.
+--      cell    : Is the cell type as defined by the standard.
+--      port    : Is the design port name. Control cells do not have a port name.
+--      function: Is the function of the cell as defined by the standard. Is one of input, output2, 
+--                output3, bidir, control or controlr.
+--      safe    : Specifies the value that the BSR cell should be loaded with for safe operation 
+--                when the software might otherwise choose a random value.
+--      ccell   : The control cell number. Specifies the control cell that drives the output enable 
+--                for this port.
+--      disval  : Specifies the value that is loaded into the control cell to disable the output 
+--                enable for the corresponding port.
+--      rslt    : Resulting state. Shows the state of the driver when it is disabled.
+   
+   attribute BOUNDARY_REGISTER of jtag_adder: entity is 
+--     
+--    num	cell	port		function	safe  [ccell  disval  rslt]
+--     
+      "13	(BC_1,	overflow,	OUTPUT2,	X),		" &
+      "12	(BC_1,	PO3,		OUTPUT2,	X),		" &	
+      "11 (BC_1, 	PO2,		OUTPUT2,	X),				" &
+      "10	(BC_1, 	PO1,		OUTPUT2,	X),				" &
+      "9	(BC_1, 	PO0,		OUTPUT2,	X),				" &
+      "8	(BC_1, 	carry_in,	INPUT,		X),				" &
+      "7	(BC_1, 	PB3,		INPUT,		X),				" &
+      "6	(BC_1, 	PB2,		INPUT,		X),				" &
+      "5	(BC_1, 	PB1,		INPUT,		X),				" &
+      "4	(BC_1, 	PB0,		INPUT,		X),				" &
+      "3	(BC_1, 	PA3,		INPUT,		X),				" &
+      "2	(BC_1, 	PA2,		INPUT,		X),				" &
+      "1	(BC_1, 	PA1,		INPUT,		X),				" &
+      "0	(BC_1, 	PA0,		INPUT,		X)				";   
+      
+       attribute DESIGN_WARNING of jtag_adder: entity is
+        "JTAG Test File created by SoCET JTAG team " &
+        "File contains port descriptions " &
+        "as described in this file." ;            
+             
+      
+end jtag_adder; 
+
+-- ******************* (C) COPYRIGHT 2015 STMicroelectronics *****END OF FILE********  
