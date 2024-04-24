@@ -1,3 +1,10 @@
+/* Testbench connecting AHB access point and AHB master 
+    author: Linda Zhang 
+    AHB manager works as the AHB master 
+    source code from AHB on AFTx07 SoCET team 
+    Note: we modified the interface to allow setting up hready 
+*/ 
+
 `timescale 1ns / 1ns
 `include "ahb_ap_if.vh"
 // `include "generic_bus_if.vh"
