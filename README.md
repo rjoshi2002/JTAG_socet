@@ -76,8 +76,8 @@ We designed a 41-bit custom AHB instruction that allow for read and write to the
 - Read or Write [1 bit]: read = 0, write = 1
 
 ### AHB Write
-- 1. send address instruction, include the address, the size, and amount of times need to be incremented 
-- 2. send the data
+ 1. send address instruction, include the address, the size, and amount of times need to be incremented 
+ 2. send the data
  
 ### AHB Read
 send the address, size and the amount of times need to be incremented
