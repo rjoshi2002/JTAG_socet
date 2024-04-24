@@ -23,24 +23,24 @@
 -- This section declares all the ports in the design.
    
    port ( 
-	  TDI		: in 	bit;
-	  TMS		: in 	bit;
-	  TCK		: in 	bit;
-	  TDO		: out	bit;
-	  PA0		: in	bit;
-	  PA1		: in	bit;
-	  PA2		: in	bit;
-	  PA3		: in	bit;
-      	  PB0		: in	bit;
-	  PB1		: in	bit;
-	  PB2		: in	bit;
-	  PB3		: in	bit;
-      	  carry_in  	: in    bit;
-	  PO0       	: buffer   bit;
-	  PO1       	: buffer   bit;
-	  PO2       	: buffer   bit;
-	  PO3       	: buffer   bit;
-      	  overflow  	: buffer   bit
+      TDI		   : in 	bit;
+      TMS		   : in 	bit;
+      TCK		   : in 	bit;
+      TDO		   : out	bit;
+      PA0		   : in	bit;
+      PA1		   : in	bit;
+      PA2		   : in	bit;
+      PA3		   : in	bit;
+      PB0		   : in	bit;
+      PB1		   : in	bit;
+      PB2		   : in	bit;
+      PB3		   : in	bit;
+      carry_in  	: in  bit;
+      PO0       	: buffer   bit;
+      PO1       	: buffer   bit;
+      PO2       	: buffer   bit;
+      PO3       	: buffer   bit;
+      overflow  	: buffer   bit
 	);
 	
 	
@@ -54,24 +54,24 @@
 -- port-to-pin map file that was read in using the "read_pin_map" command.
    
      constant SIP32: PIN_MAP_STRING :=
-	  "TDI  	: 18," &
-	  "TMS		: 17," &
-	  "TCK  	: 16," &
-	  "TDO  	: 15," &
-	  "PA0		: 0," &
-	  "PA1  	: 1," &
-	  "PA2  	: 2," &
-	  "PA3		: 3," &
-	  "PB0		: 4," &
-	  "PB1		: 5," &
-	  "PB2		: 6," &
-	  "PB3		: 7," &
-	  "carry_in	: 8," &
-	  "PO0		: 9," &
-	  "PO1		: 10," &
-	  "PO2		: 11," &
-	  "PO3		: 12," &
-	  "overflow	: 13" ;
+      "TDI        : 18," &
+      "TMS        : 17," &
+      "TCK        : 16," &
+      "TDO        : 15," &
+      "PA0        : 0," &
+      "PA1        : 1," &
+      "PA2        : 2," &
+      "PA3        : 3," &
+      "PB0        : 4," &
+      "PB1        : 5," &
+      "PB2        : 6," &
+      "PB3        : 7," &
+      "carry_in   : 8," &
+      "PO0        : 9," &
+      "PO1        : 10," &
+      "PO2        : 11," &
+      "PO3        : 12," &
+      "overflow	: 13" ;
 	  
 -- This section specifies the TAP ports. For the TAP TCK port, the parameters in the brackets are:
 --        First Field : Maximum  TCK frequency. (4 MHz)
@@ -97,11 +97,11 @@
 -- Specifies the boundary-scan instructions implemented in the design and their opcodes.
    
    attribute INSTRUCTION_OPCODE of jtag_adder: entity is 
-     "BYPASS  (11111)," &
-     "EXTEST  (00011)," &
-     "SAMPLE  (00001)," &
-     "PRELOAD (00010)," &
-     "IDCODE  (00100)";
+      "BYPASS  (11111)," &
+      "EXTEST  (00011)," &
+      "SAMPLE  (00001)," &
+      "PRELOAD (00010)," &
+      "IDCODE  (00100)";
    
 -- Specifies the bit pattern that is loaded into the instruction register when the TAP controller 
 -- passes through the Capture-IR state. The standard mandates that the two LSBs must be "01". The 
@@ -113,18 +113,18 @@
 -- instruction when the TAP controller passes through the Capture-DR state.
    
    attribute IDCODE_REGISTER of jtag_adder : entity is 
-     "0001" &              -- 4-bit version number
-     "0000000000000001" &  -- 16-bit part number -- 430
-     "00000000001" &       -- 11-bit identity of the manufacturer
-     "1";                  -- Required by IEEE Std 1149.1
+      "0001" &              -- 4-bit version number
+      "0000000000000001" &  -- 16-bit part number -- 430
+      "00000000001" &       -- 11-bit identity of the manufacturer
+      "1";                  -- Required by IEEE Std 1149.1
  
  -- This section specifies the test data register placed between TDI and TDO for each implemented 
 -- instruction.
    
    attribute REGISTER_ACCESS of jtag_adder: entity is 
-        "BYPASS    (BYPASS)," &
-        "BOUNDARY  (EXTEST, SAMPLE, PRELOAD)," &
-        "DEVICE_ID (IDCODE)";
+      "BYPASS    (BYPASS)," &
+      "BOUNDARY  (EXTEST, SAMPLE, PRELOAD)," &
+      "DEVICE_ID (IDCODE)";
 
 -- Specifies the length of the boundary scan register.
    
@@ -150,27 +150,27 @@
 --     
 --    num	cell	port		function	safe  [ccell  disval  rslt]
 --     
-      "13	(BC_1,	overflow,	OUTPUT2,	X),		" &
-      "12	(BC_1,	PO3,		OUTPUT2,	X),		" &	
-      "11 (BC_1, 	PO2,		OUTPUT2,	X),				" &
-      "10	(BC_1, 	PO1,		OUTPUT2,	X),				" &
-      "9	(BC_1, 	PO0,		OUTPUT2,	X),				" &
-      "8	(BC_1, 	carry_in,	INPUT,		X),				" &
-      "7	(BC_1, 	PB3,		INPUT,		X),				" &
-      "6	(BC_1, 	PB2,		INPUT,		X),				" &
-      "5	(BC_1, 	PB1,		INPUT,		X),				" &
-      "4	(BC_1, 	PB0,		INPUT,		X),				" &
-      "3	(BC_1, 	PA3,		INPUT,		X),				" &
-      "2	(BC_1, 	PA2,		INPUT,		X),				" &
-      "1	(BC_1, 	PA1,		INPUT,		X),				" &
-      "0	(BC_1, 	PA0,		INPUT,		X)				";   
+      "13	(BC_1,	overflow,	OUTPUT2,    X),            " &
+      "12	(BC_1,	PO3,        OUTPUT2,    X),            " &	
+      "11   (BC_1, 	PO2,        OUTPUT2,    X),				" &
+      "10	(BC_1, 	PO1,        OUTPUT2,    X),				" &
+      "9    (BC_1, 	PO0,        OUTPUT2,    X),				" &
+      "8    (BC_1, 	carry_in,   INPUT,		X),				" &
+      "7    (BC_1, 	PB3,        INPUT,		X),				" &
+      "6    (BC_1, 	PB2,        INPUT,		X),				" &
+      "5    (BC_1, 	PB1,        INPUT,		X),				" &
+      "4    (BC_1, 	PB0,        INPUT,		X),				" &
+      "3    (BC_1, 	PA3,        INPUT,		X),				" &
+      "2    (BC_1, 	PA2,        INPUT,		X),				" &
+      "1    (BC_1, 	PA1,        INPUT,		X),				" &
+      "0    (BC_1, 	PA0,        INPUT,		X)             ";   
       
-       attribute DESIGN_WARNING of jtag_adder: entity is
-        "JTAG Test File created by SoCET JTAG team " &
-        "File contains port descriptions " &
-        "as described in this file." ;            
-             
-      
+      attribute DESIGN_WARNING of jtag_adder: entity is
+         "JTAG Test File created by SoCET JTAG team " &
+         "File contains port descriptions " &
+         "as described in this file." ;            
+
+
 end jtag_adder; 
 
 -- ******************* (C) COPYRIGHT 2015 STMicroelectronics *****END OF FILE********  
