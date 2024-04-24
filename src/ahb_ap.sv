@@ -3,11 +3,15 @@
 */ 
 
 `include "ahb_ap_if.vh"
+// `include "generic_bus_if.vh"
+`include "bus_protocol_if.sv"
 `include "jtag_types_pkg.vh"
 
 module ahb_ap (
-    input AFT_CLK, TRST, 
-    ahb_ap_if.ap apif
+    input logic AFT_CLK, nRST, 
+    ahb_ap_if.ap apif, 
+    // generic_bus_if.cpu gbif 
+    bus_protocol_if.peripheral_vital busif 
 );
 
     typedef enum logic [2:0] { 
@@ -20,35 +24,47 @@ module ahb_ap (
     } state_t;
 
     state_t state, next_state; 
-    logic [40:0] ahb_data;
+    // logic [40:0] ahb_data;
     logic [31:0] real_data;  
     logic [1:0] size_ahb; 
-    logic [4:0] addr_inc;
+    logic [4:0] addr_inc, addr_inc_reg, next_addr_inc_reg;
     logic [5:0] count, next_count;  
 
     // decode instruction 
     assign real_data = apif.rdata_fifo1[40:9]; 
-    assign reg_select = apif.rdata_fifo1[8]; 
+    assign reg_select = apif.rdata_fifo1[8]; // addr 0 , data 1
     assign size_ahb = apif.rdata_fifo1[7:6]; 
     assign addr_inc = apif.rdata_fifo1[5:1];
     assign r_or_w = apif.rdata_fifo1[0]; // read 0, write 1 
     
+    logic [31:0] addr_reg, next_addr_reg, data_reg, next_data_reg, wdata_fifo2_reg, next_wdata_fifo2_reg; 
 
-    always_ff @( posedge AFT_CLK, negedge TRST ) begin 
-        if(1'b0 == TRST) begin
+    always_ff @( posedge AFT_CLK, negedge nRST ) begin 
+        if(1'b0 == nRST) begin
             state <= IDLE; 
+            addr_reg <= '0; 
+            data_reg <= '0; 
+            wdata_fifo2_reg <= '0; 
+            addr_inc_reg <= '0; 
         end else begin
             state <= next_state; 
+            addr_reg <= next_addr_reg; 
+            data_reg <= next_data_reg;
+            wdata_fifo2_reg <= next_wdata_fifo2_reg;  
+            addr_inc_reg <= next_addr_inc_reg; 
         end
     end
 
     always_comb begin: byte_en_logic 
         if(size_ahb == 2'b00) begin
-            byte_en = 4'd0; // byte
+            busif.strobe = 4'd0; // byte
+            // next_addr_reg = addr_reg + 1; 
         end else if (size_ahb == 2'd1 || size_ahb == 2'd2) begin
-            byte_en = 4'b1100; // half word 
+            busif.strobe = 4'b1100; // half word 
+            // next_addr_reg = addr_reg + 2
         end else begin
-            byte_en = 4'b1111; // word 
+            busif.strobe = 4'b1111; // word
+            // next_addr_reg = addr_reg + 4;  
         end 
     end 
 
@@ -56,7 +72,7 @@ module ahb_ap (
         next_state = state; 
         casez (state)
             IDLE: begin
-                if(!apif.rempty & reg_select) begin
+                if(!apif.rempty & !reg_select) begin
                     next_state = ADDR; 
                 end else if (!apif.rempty & reg_select & !addr_inc) begin
                     next_state = DATA; 
@@ -65,33 +81,65 @@ module ahb_ap (
                 end
             end
             ADDR: next_state = r_or_w ? WAIT : READ; 
-            READ: next_state = (apif.busy & (count == addr_inc)) ? IDLE : READ; 
+            READ: next_state = (busif.request_stall & (addr_inc_reg == addr_inc)) ? IDLE : READ; 
             WAIT: next_state = apif.rempty ? WAIT: DATA;
             DATA: next_state = (r_or_w) ? WRITE : IDLE; 
-            WRITE: next_state = apif.busy ? IDLE : WRITE; 
+            WRITE: next_state = busif.request_stall ? IDLE : WRITE; 
         endcase
     end
 
     always_comb begin : output_logic
-        apif.ren = 0; 
-        apif.wen = 0; 
-        apif.byte_en = '0; 
+        busif.ren = 0; 
+        busif.wen = 0; 
+        // busif.strobe = '0; 
         apif.rinc = 0; 
         apif.winc = 0; 
-        apif.wdata_fifo2 = '0; 
-        apif.wdata_aft = '0; 
-        apif.addr_aft = '0; 
+        // apif.wdata_fifo2 = '0;  
+        // busif.addr = '0; 
+        // busif.wdata = '0;
+        next_addr_reg = addr_reg; 
+        next_data_reg = data_reg;  
+        next_wdata_fifo2_reg = wdata_fifo2_reg; 
+        next_addr_inc_reg = addr_inc_reg; 
 
         casez (state)
-            ADDR: 
-        endcase
+            ADDR: begin
+                apif.rinc = 1'b1;
+                if(r_or_w) begin
+                    busif.wen = 1'b1; 
+                end
+            end
 
+            READ: begin
+                busif.ren = 1'b1;
+                next_wdata_fifo2_reg = busif.rdata; 
+                apif.winc = 1'b1; 
+                next_addr_reg = real_data;
+                next_addr_inc_reg += 1; 
+            end
+            DATA: begin
+                if(addr_inc) begin
+                    if(size_ahb == 2'b00) begin
+                        next_addr_reg = addr_reg + 1; 
+                    end else if (size_ahb == 2'd1 || size_ahb == 2'd2) begin
+                        next_addr_reg = addr_reg + 2;
+                    end else begin
+                        next_addr_reg = addr_reg + 4;  
+                    end 
+                end
+            end 
+            WRITE: begin
+                busif.wen = 1'b1; 
+                next_data_reg = real_data; 
+                apif.rinc = 1; 
+            end  
+        endcase
 
     end
 
     // counter 
-    always_ff @( posedge AFT_CLK, negedge TRST ) begin : counter
-        if(!TRST) begin
+    always_ff @( posedge AFT_CLK, negedge nRST ) begin : counter
+        if(!nRST) begin
             count <= '0; 
         end else begin
             count <= next_count; 
@@ -99,9 +147,20 @@ module ahb_ap (
     end
 
     always_comb begin : count_logic 
+        next_count = count; 
         if(count == 40) begin
+            next_count = 0; 
+        end else begin
+            next_count = count + 1; 
+        end
 
     end
 
+// output to ahb generic bus 
+assign busif.addr = addr_reg; 
+assign busif.wdata = data_reg; 
+
+//output to fifo 2 (read data from AHB to JTAG)
+assign apif.wdata_fifo2 = wdata_fifo2_reg; 
 
 endmodule

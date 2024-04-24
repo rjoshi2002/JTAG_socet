@@ -43,6 +43,9 @@ module instruction_decoder(
             AHB: begin
                 idif.ahb_select = 1'b1;
             end
+            AHB_READ: begin
+                idif.ahb_fifo_read_select = 1'b1;
+            end
             CLAMP_HOLD: begin
                 idif.tmp_select = 1'b1;
                 idif.clamp_hold_decode = 1'b1;
