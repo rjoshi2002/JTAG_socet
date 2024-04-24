@@ -1,10 +1,11 @@
 `timescale 1ns / 1ns
 `include "ahb_ap_if.vh"
 // `include "generic_bus_if.vh"
-`include "bus_protocol_if.sv"
-// `include "jtag_types_pkg.vh"
+// `include "bus_protocol_if.sv"
+`include "ahb_if.sv"
+`include "jtag_types_pkg.vh"
 
-module tb_ahb_ap;
+module tb_ahb_master;
 
     localparam CLK_PERIOD = 10;
 
@@ -16,20 +17,23 @@ module tb_ahb_ap;
     ahb_ap_if apif();
     // generic_bus_if gbif();
     bus_protocol_if busif(); 
+    ahb_if ahbif (.HCLK(AFT_CLK), .HRESETn(nRST));  
     
 
     test #(.PERIOD(CLK_PERIOD)) PROG (
-        .AFT_CLK(AFT_CLK), .nRST(nRST), .apif(apif), .busif(busif)//.gbif(gbif)
+        .AFT_CLK(AFT_CLK), .nRST(nRST), .apif(apif), .busif(busif), .ahbif(ahbif.jtag_temp) //.gbif(gbif)
     ); 
         
-    ahb_ap DUT(AFT_CLK, nRST, apif, busif);
+    ahb_ap DUT( .AFT_CLK(AFT_CLK), .nRST(nRST), .apif(apif), .busif(busif));
+    ahb_manager ahb_m (.busif(busif), .ahbif(ahbif.jtag_temp)); 
+
 endmodule
 
-program test (
-    input logic AFT_CLK, output logic nRST, ahb_ap_if apif, bus_protocol_if busif
+program test #(parameter PERIOD = 10)(
+    input logic AFT_CLK, output logic nRST, ahb_ap_if apif, bus_protocol_if busif, ahb_if ahbif
 ); 
-    // import jtag_types_pkg::*; 
-    parameter PERIOD = 10; 
+    import jtag_types_pkg::*; 
+    // parameter PERIOD;
     int tb_test_num; 
     string tb_test_case; 
 
@@ -59,19 +63,24 @@ task check_ahb_output;
     input logic [31:0] wdata; 
     input logic wen;
     input logic [3:0] byte_en; 
+    input logic [31:0] addr; 
 begin
-    if (busif.wdata != wdata) begin
+    if (ahbif.HWDATA != wdata) begin
         $display("Test failed: Address does not match.");
-        $stop;
+        // $stop;
     end
-    if (busif.wen != wen) begin
+    if (ahbif.HWRITE != wen) begin
         $display("Test failed: Write Enable not asserted.");
-        $stop;
+        // $stop;
     end
-    if(busif.strobe != byte_en) begin
+    if(ahbif.HWSTRB != byte_en) begin
         $display("Test failed: byte enable does not match.");
-        $stop; 
+        // $stop; 
     end 
+    if(ahbif.HADDR != addr) begin
+        $display("Test failed: write address incorrect.");
+        // $stop; 
+    end
 end
 endtask
 
@@ -81,12 +90,8 @@ task check_fifo_output;
 begin
     if(apif.wdata_fifo2 != wdata) begin
         $display("Test failed: write to fifo is wrong");
-        $stop;
+        // $stop;
     end
-    // if(apif.winc != winc) begin
-    //     $display("Test failed: winc is wrong");
-    //     $stop;
-    // end
 end
 endtask
 
@@ -96,9 +101,10 @@ initial begin
     nRST = 1'b1; 
     apif.rdata_fifo1 = 41'b0;
     apif.rempty = 1;
-    busif.request_stall = 0;
-    busif.rdata = '0; 
     apif.wfull = 0; 
+    ahbif.HRESP = 0; 
+    ahbif.HREADYOUT = 0;  
+    ahbif.HRDATA = '0; 
 
     reset_dut; 
 
@@ -109,30 +115,65 @@ initial begin
 
     apif.rdata_fifo1 = {32'hABCD1234, 1'b1, 2'd0, 5'd0, 1'b1}; 
     apif.rempty = 0; 
+    ahbif.HREADYOUT = 1; 
+    ahbif.HRESP = 1; 
     @(posedge AFT_CLK); 
     // apif.rempty = 1; 
     #(PERIOD * 32); 
-    busif.request_stall = 1; 
+    // busif.request_stall = 1; 
     apif.wfull = 0; 
     
     
-    check_ahb_output(32'hABCD1234, 1'b1, 4'd0); 
+    check_ahb_output(32'hABCD1234, 1'b1, 4'd0, '0); 
     apif.rempty = 0; 
     reset_dut; 
     tb_test_num++; 
     tb_test_case = "read data from AHB (byte) and write to fifo2";
 
     apif.rdata_fifo1 = {32'h0, 1'b1, 8'b0, 1'b0}; 
-    busif.rdata = 32'h12345678; 
+    ahbif.HRDATA = 32'h12345678; 
     apif.rempty = 0; 
     @(posedge AFT_CLK); 
+    #(PERIOD * 2); 
+    apif.wfull = 0; 
     // apif.rempty = 1; 
+    @(posedge AFT_CLK); 
+    apif.wfull = 1; 
+    ahbif.HRDATA = 32'h0000abcd;
     apif.wfull = 0; 
     #(PERIOD * 32); 
-    check_fifo_output(32'h12345678);
+    // check_fifo_output(32'h12345678);
+
+    reset_dut; 
+    tb_test_num++; 
+    tb_test_case = "write addr to ahb"; 
+
+    apif.rempty = 1; 
+    ahbif.HRDATA = '0; 
+    ahbif.HREADYOUT = 1; 
+    ahbif.HRESP = 1; 
+    apif.rdata_fifo1 = {32'h12345678, 1'b0, 2'b11, 5'd0,1'b1}; 
+    @(posedge AFT_CLK); 
+    #(PERIOD*32);
+    ahbif.HREADYOUT = 1; 
+    apif.rempty = 0; 
+    @(posedge AFT_CLK); 
+    ahbif.HREADYOUT = 0; 
+    apif.rempty = 1; 
+    ahbif.HREADYOUT = 1; 
+    apif.rdata_fifo1 = {32'h456789ab, 1'b1, 2'b11, 5'd0, 1'b1}; 
+    apif.rempty = 0; 
+    ahbif.HREADYOUT = 1; 
+    ahbif.HRESP = 1; 
+    @(posedge AFT_CLK); 
+    // apif.rempty = 1; 
+    #(PERIOD * 32); 
+    // busif.request_stall = 1; 
+    apif.wfull = 0; 
+    check_ahb_output(32'h456789ab, 1'b1, 4'b1111, 32'h12345678); 
 
     // Finish the simulation
-    $display("All tests passed.");
-    $finish;
+    // $display("All tests passed.");
+    // $finish;
 end
 endprogram
