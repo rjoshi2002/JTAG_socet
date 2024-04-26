@@ -85,7 +85,7 @@ send the address, size and the amount of times need to be incremented
 ## JTAG UVM TestBench
 A brief description of how the JTAG UVM TestBench work.
 ### Top Level Diagram
-![Top Level]()
+![Top Level](UVM.drawio.png)
 ### Progress
 We have successfully finished the testing of EXTEST, PRELOAD/SAMPLE, and IDCODE instruction. You can see that there is three different sequence in sequence.sh. The instructions we haven't tested are AHB, AHB_READ, and BYPASS.
 ### Interface signals for UVM TestBench
