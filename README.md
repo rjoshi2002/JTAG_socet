@@ -13,11 +13,11 @@ The following README contains our documentation for the JTAG project completed o
 
 ## FPGA
 
-Our FPGA code contains the synthesizable JTAG module placed on a 4 bit adder, this allows us to test the boundary scan functionality by connecting the debugger to the FPGA via GPIO pins.
+Our FPGA code contains the synthesizable JTAG module placed on a 4-bit adder, this allows us to test the boundary scan functionality by connecting the debugger to the FPGA via GPIO pins.
 
 [![FPGA Demonstration](https://youtu.be/SV9wQ_Qm2Ac)](https://youtu.be/SV9wQ_Qm2Ac)
 
-The code for the compiling the JTAG module on the fpga is contained within the ~/FPGA directory
+The code for compiling the JTAG module on the FPGA is contained within the ~/FPGA directory
 
 This code can be compiled on the lab computers via an mg account (437) using the following command
 
@@ -53,7 +53,7 @@ Currently it is set up for the ESP32 with the following pin maps:
 
 The clock speed is configurable through the **half_period** variable
 
-Currently the debugger code uses digitalWrite and digitalRead for testing simplicity in most of the functions, however this can be changed to the following for speed (already done for **TCK**)
+Currently, the debugger code uses digitalWrite and digitalRead for testing simplicity in most of the functions, however, this can be changed to the following for speed (already done for **TCK**)
 
 `digitalWrite(PIN#, 1)` with `GPIO.out_w1ts = ((uint32_t)1 << PIN#);` 
 
@@ -65,7 +65,16 @@ Currently the debugger code uses digitalWrite and digitalRead for testing simpli
 
 `digitalRead(PIN#)` with `(GPIO.in >> PIN#)`
 
-The debugger directory also contains code for a parser that will improve the functionality of the code. This parser allows you to read through a BSDL (Boundary Scan Description Language File) and populate a text file with the constants that are used in the arduino code. *The functionality that must be added to this is a command to run the parser and populate the constants in the arduino code.*
+The debugger directory also contains code for a parser that will improve the functionality of the code. This parser allows you to read through a BSDL (Boundary Scan Description Language File) and populate a text file with the constants that are used in the Arduino code. *The functionality that must be added to this is a command to run the parser and populate the constants in the Arduino code.*
+
+## Parser
+
+We designed a custom parser so it can read the standard BSDL files and populate the specific constants in a text file to make using our custom debugger more flexible.
+
+Once in the `jtag_debugger_esp32` directory, run the following command to run the parser which should create `output.txt`
+
+`python3 parse.py`
+
 ## Custom AHB instruction
 
 We designed a 41-bit custom AHB instruction that allow for read and write to the RAM of device through AHB protocol.
